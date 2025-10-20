@@ -7,27 +7,31 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 /**
- *Seeder para popular a tabela de roles com os papéis padrão da aplicação.
+ * Seeder para popular a tabela de roles com os papéis padrão da aplicação.
  */
 class RoleSeeder extends Seeder
 {
     /**
-     *Executa o seeder para o banco de dados.
+     * Executa o seeder para o banco de dados.
      *
-     *Cria os papéis (roles) padrão 'usp_user' e 'external_user' para o guard 'web'.
+     * Cria os papéis (roles) padrão para o sistema CotaC:
+     * - 'usp_user' e 'external_user': papéis do starter kit
+     * - 'Admin' (ADM): administrador com acesso total
+     * - 'Operador' (OPR): operador com acesso restrito a consultas
      *
-     *Limpa o cache de permissões antes de criar os papéis para garantir consistência.
+     * Limpa o cache de permissões antes de criar os papéis para garantir consistência.
      */
     public function run(): void
     {
         // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create roles for local authentication
+        // Create roles for local authentication (starter kit)
         Role::firstOrCreate(['name' => 'usp_user', 'guard_name' => 'web']);
         Role::firstOrCreate(['name' => 'external_user', 'guard_name' => 'web']);
 
-        // Admin role for Filament panel access
+        // Create roles for CotaC system
         Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+        Role::firstOrCreate(['name' => 'Operador', 'guard_name' => 'web']);
     }
 }

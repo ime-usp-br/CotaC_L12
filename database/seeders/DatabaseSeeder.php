@@ -20,11 +20,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        // Call other seeders
+        // Call other seeders in the correct order
         $this->call([
-            RoleSeeder::class,
-            FilamentAdminSeeder::class,
-            // Other seeders can be added here
+            RoleSeeder::class,          // Create roles first
+            ProdutoSeeder::class,        // Populate products
+            CotaRegularSeeder::class,    // Populate regular quotas
+            FilamentAdminSeeder::class,  // Create Filament admin user
         ]);
     }
 }
