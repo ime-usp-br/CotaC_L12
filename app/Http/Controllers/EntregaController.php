@@ -30,11 +30,16 @@ class EntregaController extends Controller
 
         return response()->json([
             'data' => $pedidosPendentes->map(function ($pedido) {
+                $consumidor = $pedido->consumidor;
+                if ($consumidor === null) {
+                    return [];
+                }
+
                 return [
                     'id' => $pedido->id,
                     'consumidor' => [
-                        'codpes' => $pedido->consumidor->codpes,
-                        'nome' => $pedido->consumidor->nome,
+                        'codpes' => $consumidor->codpes,
+                        'nome' => $consumidor->nome,
                     ],
                     'estado' => $pedido->estado,
                     'itens' => $pedido->itens->map(function ($item) {
