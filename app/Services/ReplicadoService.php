@@ -12,6 +12,79 @@ use Uspdev\Replicado\Pessoa;
 class ReplicadoService
 {
     /**
+     * Busca dados básicos de uma pessoa no Replicado.
+     *
+     * @param  int  $codpes  O Número USP (NUSP).
+     * @return array{codpes: int, nompes: string, emailusp: string}|null Retorna um array com os dados da pessoa ou null se não encontrada.
+     *
+     * @throws \App\Exceptions\ReplicadoServiceException Se ocorrer um problema de comunicação com o banco de dados Replicado.
+     */
+    public function buscarPessoa(int $codpes): ?array
+    {
+        try {
+            $pessoa = Pessoa::dump($codpes);
+
+            if (empty($pessoa) || ! isset($pessoa['nompes'])) {
+                Log::info("Replicado: Person not found for codpes {$codpes}.");
+
+                return null;
+            }
+
+            $emailUsp = Pessoa::retornarEmailUsp($codpes);
+
+            return [
+                'codpes' => $codpes,
+                'nompes' => is_string($pessoa['nompes']) ? $pessoa['nompes'] : '',
+                'emailusp' => $emailUsp ?: '',
+            ];
+        } catch (\Exception $e) {
+            Log::error("Replicado Service Error: Failed fetching person data for codpes {$codpes}. Error: ".$e->getMessage(), ['exception' => $e]);
+            throw new ReplicadoServiceException('Replicado service communication error while fetching person data.', 0, $e);
+        }
+    }
+
+    /**
+     * Obtém os vínculos ativos de uma pessoa em uma unidade específica.
+     *
+     * Retorna apenas vínculos ativos (sitatl = 'A' ou 'P') da unidade especificada.
+     *
+     * @param  int  $codpes  O Número USP (NUSP).
+     * @param  int  $codund  O código da unidade (ex: 8 para IME).
+     * @return array<int, string> Array com as siglas dos vínculos ativos (ex: ['SERVIDOR', 'ALUNOPOS']).
+     *
+     * @throws \App\Exceptions\ReplicadoServiceException Se ocorrer um problema de comunicação com o banco de dados Replicado.
+     */
+    public function obterVinculosAtivos(int $codpes, int $codund): array
+    {
+        try {
+            // Configura temporariamente o código da unidade no ambiente
+            $originalCodeUnd = getenv('REPLICADO_CODUNDCLG');
+            putenv("REPLICADO_CODUNDCLG={$codund}");
+
+            $vinculos = Pessoa::obterSiglasVinculosAtivos($codpes);
+
+            // Restaura o valor original
+            if ($originalCodeUnd !== false) {
+                putenv("REPLICADO_CODUNDCLG={$originalCodeUnd}");
+            } else {
+                putenv('REPLICADO_CODUNDCLG');
+            }
+
+            if (empty($vinculos)) {
+                Log::info("Replicado: No active vinculos found for codpes {$codpes} in unit {$codund}.");
+
+                return [];
+            }
+
+            /** @var array<int, string> */
+            return $vinculos;
+        } catch (\Exception $e) {
+            Log::error("Replicado Service Error: Failed fetching vinculos for codpes {$codpes} in unit {$codund}. Error: ".$e->getMessage(), ['exception' => $e]);
+            throw new ReplicadoServiceException('Replicado service communication error while fetching vinculos.', 0, $e);
+        }
+    }
+
+    /**
      * Valida se o Número USP (codpes) e o e-mail fornecidos pertencem à mesma pessoa válida no Replicado.
      *
      * Este método consulta o Replicado para verificar a existência do `codpes`

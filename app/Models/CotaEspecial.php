@@ -14,6 +14,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CotaEspecial extends Model
 {
     /**
+     * O nome da tabela associada ao modelo.
+     *
+     * @var string
+     */
+    protected $table = 'cota_especiais';
+
+    /**
      * Os atributos que podem ser atribuídos em massa.
      *
      * @var list<string>

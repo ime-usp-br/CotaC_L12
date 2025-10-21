@@ -13,6 +13,13 @@ use Illuminate\Database\Eloquent\Model;
 class CotaRegular extends Model
 {
     /**
+     * O nome da tabela associada ao modelo.
+     *
+     * @var string
+     */
+    protected $table = 'cota_regulares';
+
+    /**
      * Os atributos que podem ser atribuídos em massa.
      *
      * @var list<string>
