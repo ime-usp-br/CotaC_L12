@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -11,9 +12,21 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * Esta entidade armazena apenas informações mínimas (codpes e nome),
  * pois os dados completos são consultados em tempo real via Replicado.
+ *
+ * @use HasFactory<\Database\Factories\ConsumidorFactory>
  */
 class Consumidor extends Model
 {
+    /** @use HasFactory<\Database\Factories\ConsumidorFactory> */
+    use HasFactory;
+
+    /**
+     * O nome da tabela associada ao modelo.
+     *
+     * @var string
+     */
+    protected $table = 'consumidores';
+
     /**
      * A chave primária customizada para esta tabela.
      *

@@ -22,6 +22,16 @@ class FakeReplicadoService extends ReplicadoService
     public bool $shouldThrowException = false;
 
     /**
+     * Storage for fake pessoa data.
+     */
+    private array $pessoas = [];
+
+    /**
+     * Storage for fake vinculos data.
+     */
+    private array $vinculos = [];
+
+    /**
      * Simulates the validation logic.
      *
      *
@@ -63,5 +73,71 @@ class FakeReplicadoService extends ReplicadoService
         $this->shouldThrowException = true;
 
         return $this;
+    }
+
+    /**
+     * Sets fake pessoa data for a specific codpes.
+     *
+     * @param  array  $data  Array with keys: 'nompes', 'emailusp'
+     * @return $this
+     */
+    public function setPessoa(int $codpes, array $data): self
+    {
+        $this->pessoas[$codpes] = $data;
+
+        return $this;
+    }
+
+    /**
+     * Sets fake vinculos data for a specific codpes and unit.
+     *
+     * @param  array  $vinculos  Array of vinculos siglas (e.g., ['SERVIDOR', 'ALUNOPOS'])
+     * @return $this
+     */
+    public function setVinculos(int $codpes, int $codund, array $vinculos): self
+    {
+        $this->vinculos["{$codpes}_{$codund}"] = $vinculos;
+
+        return $this;
+    }
+
+    /**
+     * Simulates buscarPessoa method.
+     *
+     *
+     * @throws \App\Exceptions\ReplicadoServiceException
+     */
+    public function buscarPessoa(int $codpes): ?array
+    {
+        if ($this->shouldThrowException) {
+            throw new ReplicadoServiceException('Simulated Replicado service communication error.');
+        }
+
+        if (! isset($this->pessoas[$codpes])) {
+            return null;
+        }
+
+        return [
+            'codpes' => $codpes,
+            'nompes' => $this->pessoas[$codpes]['nompes'] ?? 'Test Person',
+            'emailusp' => $this->pessoas[$codpes]['emailusp'] ?? 'test@usp.br',
+        ];
+    }
+
+    /**
+     * Simulates obterVinculosAtivos method.
+     *
+     *
+     * @throws \App\Exceptions\ReplicadoServiceException
+     */
+    public function obterVinculosAtivos(int $codpes, int $codund): array
+    {
+        if ($this->shouldThrowException) {
+            throw new ReplicadoServiceException('Simulated Replicado service communication error.');
+        }
+
+        $key = "{$codpes}_{$codund}";
+
+        return $this->vinculos[$key] ?? [];
     }
 }
