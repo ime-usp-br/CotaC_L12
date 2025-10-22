@@ -51,4 +51,17 @@ class UserResource extends Resource
             'edit' => EditUser::route('/{record}/edit'),
         ];
     }
+
+    /**
+     * Customiza a query para exibir apenas usuários com roles Admin ou Operador.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<User>
+     */
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereHas('roles', function ($query) {
+                $query->whereIn('name', ['Admin', 'Operador']);
+            });
+    }
 }
