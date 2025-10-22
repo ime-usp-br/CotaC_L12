@@ -12,8 +12,8 @@ class EmailLogPolicy
      */
     public function viewAny(User $user): bool
     {
-        // Apenas admins podem ver logs de emails
-        return $user->hasRole('Admin');
+        // Apenas usuários com permissão gerenciar_usuarios podem ver logs de emails
+        return $user->hasPermissionTo('gerenciar_usuarios');
     }
 
     /**
@@ -21,8 +21,8 @@ class EmailLogPolicy
      */
     public function view(User $user, EmailLog $emailLog): bool
     {
-        // Apenas admins podem ver logs de emails
-        return $user->hasRole('Admin');
+        // Apenas usuários com permissão gerenciar_usuarios podem ver logs de emails
+        return $user->hasPermissionTo('gerenciar_usuarios');
     }
 
     /**

@@ -12,8 +12,8 @@ class AuditPolicy
      */
     public function viewAny(User $user): bool
     {
-        // Apenas admins podem ver logs de auditoria
-        return $user->hasRole('Admin');
+        // Apenas usuários com permissão ver_auditoria podem ver logs
+        return $user->hasPermissionTo('ver_auditoria');
     }
 
     /**
@@ -21,8 +21,8 @@ class AuditPolicy
      */
     public function view(User $user, Audit $audit): bool
     {
-        // Apenas admins podem ver logs de auditoria
-        return $user->hasRole('Admin');
+        // Apenas usuários com permissão ver_auditoria podem ver logs
+        return $user->hasPermissionTo('ver_auditoria');
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -19,6 +20,8 @@ class RoleSeeder extends Seeder
      * - 'Admin' (ADM): administrador com acesso total
      * - 'Operador' (OPR): operador com acesso restrito a consultas
      *
+     * Cria as permissões do sistema e as atribui aos papéis adequados.
+     *
      * Limpa o cache de permissões antes de criar os papéis para garantir consistência.
      */
     public function run(): void
@@ -26,12 +29,31 @@ class RoleSeeder extends Seeder
         // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
+        // Create permissions
+        $permissions = [
+            'gerenciar_cotas',
+            'gerenciar_produtos',
+            'gerenciar_usuarios',
+            'ver_extratos',
+            'ver_auditoria',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
+        }
+
         // Create roles for local authentication (starter kit)
         Role::firstOrCreate(['name' => 'usp_user', 'guard_name' => 'web']);
         Role::firstOrCreate(['name' => 'external_user', 'guard_name' => 'web']);
 
         // Create roles for CotaC system
-        Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
-        Role::firstOrCreate(['name' => 'Operador', 'guard_name' => 'web']);
+        $adminRole = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+        $operadorRole = Role::firstOrCreate(['name' => 'Operador', 'guard_name' => 'web']);
+
+        // Assign all permissions to Admin
+        $adminRole->syncPermissions($permissions);
+
+        // Assign only ver_extratos permission to Operador
+        $operadorRole->syncPermissions(['ver_extratos']);
     }
 }
