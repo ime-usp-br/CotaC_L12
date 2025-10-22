@@ -3,8 +3,11 @@
 namespace App\Filament\Widgets;
 
 use App\Filament\Resources\AuditResource;
+use App\Filament\Resources\CotaEspecialResource;
+use App\Filament\Resources\CotaRegularResource;
 use App\Filament\Resources\EmailLogResource;
 use App\Filament\Resources\Permissions\PermissionResource;
+use App\Filament\Resources\ProdutoResource;
 use App\Filament\Resources\Roles\RoleResource;
 use App\Filament\Resources\Users\UserResource;
 use Filament\Widgets\Widget;
@@ -28,6 +31,30 @@ class NavigationCardsWidget extends Widget
                 'url' => UserResource::getUrl('index'),
                 'color' => 'primary',
                 'stats' => \App\Models\User::count(),
+            ],
+            [
+                'title' => 'Cotas Regulares',
+                'description' => 'Gerenciar cotas por vínculo USP',
+                'icon' => 'heroicon-o-clipboard-document-list',
+                'url' => CotaRegularResource::getUrl('index'),
+                'color' => 'blue',
+                'stats' => \App\Models\CotaRegular::count(),
+            ],
+            [
+                'title' => 'Cotas Especiais',
+                'description' => 'Gerenciar cotas individuais customizadas',
+                'icon' => 'heroicon-o-star',
+                'url' => CotaEspecialResource::getUrl('index'),
+                'color' => 'amber',
+                'stats' => \App\Models\CotaEspecial::count(),
+            ],
+            [
+                'title' => 'Produtos',
+                'description' => 'Gerenciar produtos disponíveis',
+                'icon' => 'heroicon-o-shopping-bag',
+                'url' => ProdutoResource::getUrl('index'),
+                'color' => 'green',
+                'stats' => \App\Models\Produto::count(),
             ],
             [
                 'title' => 'Perfis',

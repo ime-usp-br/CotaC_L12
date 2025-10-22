@@ -36,10 +36,11 @@ class UserForm
                     ->required(fn (string $context): bool => $context === 'create')
                     ->maxLength(255),
                 Select::make('roles')
-                    ->relationship('roles', 'name')
+                    ->relationship('roles', 'name', fn ($query) => $query->whereIn('name', ['Admin', 'Operador']))
                     ->multiple()
                     ->preload()
-                    ->searchable(),
+                    ->searchable()
+                    ->helperText('Selecione os papéis do usuário (Admin ou Operador)'),
             ]);
     }
 }
