@@ -428,6 +428,10 @@ test/<ID>-descricao-curta
 
 **Exemplo de workflow:**
 ```bash
+# ⚠️ CRÍTICO: SEMPRE atualize a main ANTES de criar nova branch
+git checkout main
+git pull origin main
+
 # Verificar branch atual
 git branch --show-current
 
@@ -440,6 +444,12 @@ git checkout -b test/21-feature-tests-fluxos-principais
 # Push da branch
 git push -u origin test/21-feature-tests-fluxos-principais
 ```
+
+**⚠️ PROBLEMA COMUM:** Se você criar uma branch sem atualizar a `main` local primeiro, commits de outras branches que ainda não foram mergeados podem aparecer no seu PR!
+
+**Sintoma:** PR mostra commits que não foram feitos por você ou que não fazem parte da issue atual.
+
+**Solução:** Sempre execute `git checkout main && git pull origin main` ANTES de criar qualquer nova branch.
 
 ### 9.4. Commits
 
