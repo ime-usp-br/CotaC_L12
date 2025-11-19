@@ -404,6 +404,8 @@ $this->app->instance(ReplicadoService::class, $fakeReplicado);
 
 ### 9.3. Branches
 
+**IMPORTANTE:** Antes de começar a trabalhar em uma issue, **SEMPRE** crie uma branch específica para ela. Nunca trabalhe diretamente na `main` ou em branches de outras issues.
+
 **Convenção:**
 ```
 feature/<ID>-descricao-curta
@@ -411,6 +413,21 @@ fix/<ID>-descricao-curta
 chore/<ID>-descricao-curta
 refactor/<ID>-descricao-curta
 test/<ID>-descricao-curta
+```
+
+**Exemplo de workflow:**
+```bash
+# Verificar branch atual
+git branch --show-current
+
+# Criar e mudar para nova branch
+git checkout -b test/21-feature-tests-fluxos-principais
+
+# Trabalhar na issue...
+# Fazer commits...
+
+# Push da branch
+git push -u origin test/21-feature-tests-fluxos-principais
 ```
 
 ### 9.4. Commits
