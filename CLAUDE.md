@@ -430,6 +430,8 @@ test/<ID>-descricao-curta
 Ref: #<ID_da_Issue>
 ```
 
+**Dica:** Evite usar múltiplos parâmetros `-m` (ex: `git commit -m "Titulo" -m "Corpo"`), pois isso cria quebras de linha excessivas. Prefira passar a mensagem completa em uma única string com quebras de linha ou usar um editor.
+
 **Tipos:**
 - `feat:` Nova funcionalidade
 - `fix:` Correção de bug
