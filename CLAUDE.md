@@ -453,11 +453,70 @@ Ref: #45
 
 ### 9.5. Pull Requests
 
-**Título:** Claro e relacionado à Issue
+**IMPORTANTE:** Antes de criar um PR, **SEMPRE** verifique PRs anteriores para seguir o padrão exato do projeto.
 
-**Descrição:** **SEMPRE** incluir:
+**Comando para listar PRs:**
+```bash
+gh pr list --state all --limit 5 --json number,title,body
+```
+
+**Padrão Observado:**
+- Título em inglês, formato: `<tipo>(<escopo>): <descrição>`
+- Corpo estruturado em seções com `##` (Markdown)
+- Seções obrigatórias: **Summary**, **Changes Made**, **How they were tested**, **Related Issues**
+- Usar backticks para nomes de arquivos, classes e métodos
+- Usar bullet points (`-`) para listar mudanças
+- Finalizar com `Closes #<ID>`
+
+**Título:** Claro e relacionado à Issue (em inglês)
+
+**Descrição:** **SEMPRE** incluir as seguintes seções:
 ```markdown
+## Summary
+[Breve descrição do que o PR faz e qual issue resolve]
+
+## Changes Made
+- [Mudança 1]
+- [Mudança 2]
+- [Mudança 3]
+
+## How they were tested
+- **Automated Tests:** [Descrever testes automatizados]
+- **Manual Testing:** [Descrever testes manuais]
+
+## Related Issues
 Closes #<ID>
+```
+
+**Exemplo Completo:**
+```markdown
+Título: feat(admin): Implement ConsumidorResource with audit logs
+
+Corpo:
+## Summary
+This PR implements the `Consumidor` resource in the Filament admin panel and enables full auditing for the `Consumidor` model, addressing issue #29.
+
+## Changes Made
+- Created `ConsumidorResource` allowing listing and editing of consumers.
+- Implemented `Auditable` interface and trait in `Consumidor` model.
+- Added a "Consumidores" card to the dashboard with `rose` color and `user-group` icon.
+- Added integration tests to verify audit logs for consumer creation and updates.
+
+## How they were tested
+- **Automated Tests:** Added `test_consumidor_changes_are_audited` in `AuditIntegrationTest.php` which passed successfully.
+- **Manual Testing:** Verified listing and editing consumers in the admin panel and checked the generated audit logs in the "Logs de Auditoria" section.
+
+## Related Issues
+Closes #29
+```
+
+**Dica:** Se `gh pr edit` falhar com erro de GraphQL, use a API diretamente:
+```bash
+curl -X PATCH -H "Authorization: token $(gh auth token)" \
+  -H "Accept: application/vnd.github.v3+json" \
+  https://api.github.com/repos/<owner>/<repo>/pulls/<number> \
+  -d '{"body": "..."}'
+```
 ```
 
 **Merge:** Após CI passar e auto-revisão
