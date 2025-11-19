@@ -417,6 +417,8 @@ test/<ID>-descricao-curta
 
 **IMPORTANTE:** Antes de commitar, **SEMPRE** verifique o histórico recente com `git log -n 5` para seguir o padrão exato do projeto.
 
+**⚠️ NÃO use `--oneline`:** O comando `git log --oneline` mostra apenas o título do commit, ocultando o corpo com os detalhes em bullet points. Use `git log -n 5` (sem flags adicionais) para ver o padrão completo.
+
 **Padrão:** Conventional Commits com Lista de Detalhes
 
 **Formato:**
