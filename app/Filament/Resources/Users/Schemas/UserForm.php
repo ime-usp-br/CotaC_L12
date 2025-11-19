@@ -36,7 +36,7 @@ class UserForm
                     ->required(fn (string $context): bool => $context === 'create')
                     ->maxLength(255),
                 Select::make('roles')
-                    ->relationship('roles', 'name', fn ($query) => $query->whereIn('name', ['Admin', 'Operador']))
+                    ->relationship('roles', 'name', fn (\Illuminate\Database\Eloquent\Builder $query) => $query->whereIn('name', ['Admin', 'Operador']))
                     ->multiple()
                     ->preload()
                     ->searchable()

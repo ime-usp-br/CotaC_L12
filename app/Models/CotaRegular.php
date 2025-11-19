@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 use OwenIt\Auditing\Contracts\Auditable;
 
 /**
@@ -15,6 +14,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class CotaRegular extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
+
     /**
      * O nome da tabela associada ao modelo.
      *

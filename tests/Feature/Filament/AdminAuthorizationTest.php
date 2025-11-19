@@ -4,7 +4,6 @@ namespace Tests\Feature\Filament;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AdminAuthorizationTest extends TestCase
@@ -124,4 +123,3 @@ class AdminAuthorizationTest extends TestCase
         $response->assertRedirect('/login/local');
     }
 }
-

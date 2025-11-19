@@ -17,7 +17,10 @@ class CreateCotaEspecial extends CreateRecord
      */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $codpes = $data['consumidor_codpes'];
+        $rawCodepes = $data['consumidor_codpes'];
+        assert(is_int($rawCodepes) || is_numeric($rawCodepes));
+        /** @var int $codpes */
+        $codpes = is_int($rawCodepes) ? $rawCodepes : (int) $rawCodepes;
 
         // Check if consumidor already exists
         $consumidor = Consumidor::find($codpes);
@@ -26,7 +29,7 @@ class CreateCotaEspecial extends CreateRecord
             // Fetch person data from Replicado
             try {
                 $pessoa = Pessoa::dump($codpes);
-                
+
                 if ($pessoa) {
                     // Create the consumidor
                     Consumidor::create([

@@ -22,7 +22,7 @@ class AuditIntegrationTest extends TestCase
     {
         parent::setUp();
         $this->seed(\Database\Seeders\RoleSeeder::class);
-        
+
         // Ensure auditing is enabled for tests
         config(['audit.console' => true]);
     }
@@ -94,9 +94,9 @@ class AuditIntegrationTest extends TestCase
         $this->actingAs($admin);
 
         $codpes = 123456;
-        
+
         // Mock Replicado
-        $pessoaMock = \Mockery::mock('alias:' . Pessoa::class);
+        $pessoaMock = \Mockery::mock('alias:'.Pessoa::class);
         $pessoaMock->shouldReceive('dump')
             ->with($codpes)
             ->andReturn(['nompesttd' => 'Fulano de Tal']);
