@@ -183,9 +183,12 @@ Laravel Sail fornece um ambiente Docker completo com PHP, MySQL, Redis, Selenium
         DB_PASSWORD=password
 
         # Configuração de usuário Docker
+        # IMPORTANTE: Ajuste para seu UID/GID local (rode `id -u` e `id -g` para descobrir)
         WWWUSER=1000
         WWWGROUP=1000
         ```
+    *   **Nota para Linux:** Se seu UID não for 1000 (comum ser 1001 ou outro), ajuste `WWWUSER` e `WWWGROUP` para evitar problemas de permissão.
+    *   **Conflito de Portas:** Se você já tem MySQL rodando na porta 3306, adicione `FORWARD_DB_PORT=3307` ao `.env`.
     *   **Credenciais USP:** Adicione e configure as variáveis para `uspdev/senhaunica-socialite` e `uspdev/replicado` (veja a seção 7).
 
 4.  **Iniciar Containers Docker:**
@@ -202,6 +205,15 @@ Laravel Sail fornece um ambiente Docker completo com PHP, MySQL, Redis, Selenium
 6.  **Instalar Dependências Frontend:**
     ```bash
     ./vendor/bin/sail npm install
+    ```
+    *Nota: Se você não tiver Composer instalado localmente, instale as dependências PHP via Docker antes de iniciar o Sail:*
+    ```bash
+    docker run --rm \
+        -u "$(id -u):$(id -g)" \
+        -v "$(pwd):/var/www/html" \
+        -w /var/www/html \
+        laravelsail/php82-composer:latest \
+        composer install --ignore-platform-reqs
     ```
 
 7.  **Executar Migrações e Seeders:**
@@ -303,6 +315,27 @@ Agora você pode usar `sail up -d`, `sail artisan migrate`, `sail npm run dev`, 
         *   `DB_CONNECTION=sqlite` e `DB_DATABASE=database/testing/dusk.sqlite` (recomendado usar um banco de dados SQLite separado para testes Dusk)
 
 Seu ambiente de desenvolvimento com o Starter Kit deve estar pronto para uso.
+
+### 6.3. Troubleshooting e Dicas de Instalação
+
+#### Erros de Permissão (Linux)
+Se encontrar erros como `Permission denied` ao escrever em logs ou storage:
+1. Verifique seu UID com `id -u`.
+2. Atualize `WWWUSER` e `WWWGROUP` no `.env` com seu UID.
+3. Reconstrua os containers: `./vendor/bin/sail build --no-cache`.
+4. Ajuste permissões locais se necessário: `sudo chown -R $USER:$USER storage bootstrap/cache`.
+
+#### Conflito de Porta MySQL
+Se o container MySQL falhar ao iniciar com erro "address already in use":
+1. Adicione `FORWARD_DB_PORT=3307` (ou outra porta livre) no seu `.env`.
+2. Reinicie o Sail: `./vendor/bin/sail down && ./vendor/bin/sail up -d`.
+
+#### Usuários não aparecem no Painel Admin
+Se você criar um usuário (ex: via Senha Única) e ele não aparecer na listagem do Filament:
+- Verifique se o `UserResource` possui algum filtro global (ex: `getEloquentQuery`) que restringe a visualização apenas a usuários com roles específicas.
+
+#### Arquivo package-lock.json mudando nome para "html"
+Se rodar `npm install` via Sail, o `package-lock.json` pode ter o campo `"name"` alterado para `"html"`. Isso ocorre porque o diretório de trabalho no container é `/var/www/html`. Recomenda-se reverter essa mudança específica no arquivo se ocorrer.
 
 ## 7. Uso Básico
 
