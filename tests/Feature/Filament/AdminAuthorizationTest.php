@@ -72,4 +72,56 @@ class AdminAuthorizationTest extends TestCase
 
         $this->assertFalse($user->canAccessPanel($panel));
     }
+
+    /**
+     * Testa que Operador não pode gerenciar produtos (sem permissão gerenciar_produtos).
+     */
+    public function test_operador_nao_pode_gerenciar_produtos(): void
+    {
+        $operador = User::factory()->create();
+        $operador->assignRole('Operador');
+
+        $this->assertFalse($operador->can('viewAny', \App\Models\Produto::class));
+        $this->assertFalse($operador->can('create', \App\Models\Produto::class));
+        $this->assertFalse($operador->hasPermissionTo('gerenciar_produtos'));
+    }
+
+    /**
+     * Testa que Admin pode gerenciar produtos (tem permissão gerenciar_produtos).
+     */
+    public function test_admin_pode_gerenciar_produtos(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('Admin');
+
+        $this->assertTrue($admin->can('viewAny', \App\Models\Produto::class));
+        $this->assertTrue($admin->can('create', \App\Models\Produto::class));
+        $this->assertTrue($admin->hasPermissionTo('gerenciar_produtos'));
+    }
+
+    /**
+     * Testa que Operador pode ver extratos (tem permissão ver_extratos).
+     */
+    public function test_operador_pode_ver_extratos(): void
+    {
+        $operador = User::factory()->create();
+        $operador->assignRole('Operador');
+
+        $this->assertTrue($operador->hasPermissionTo('ver_extratos'));
+        $this->assertFalse($operador->hasPermissionTo('gerenciar_produtos'));
+        $this->assertFalse($operador->hasPermissionTo('gerenciar_usuarios'));
+    }
+
+    /**
+     * Testa que usuário sem autenticação não pode acessar recursos Filament.
+     */
+    public function test_usuario_sem_autenticacao_nao_acessa_recursos_filament(): void
+    {
+        // Tentar acessar recurso de produtos sem autenticação
+        $response = $this->get('/admin/produtos');
+
+        // Deve redirecionar para login
+        $response->assertRedirect('/login/local');
+    }
 }
+
