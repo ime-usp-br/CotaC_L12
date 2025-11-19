@@ -4,14 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use OwenIt\Auditing\Contracts\Auditable;
+
 /**
  * CotaRegular - Define cotas mensais padrão baseadas no vínculo USP.
  *
  * Esta entidade não possui relacionamentos diretos com outras tabelas.
  * A lógica de negócio buscará registros desta tabela pelo campo 'vinculo'.
  */
-class CotaRegular extends Model
+class CotaRegular extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     /**
      * O nome da tabela associada ao modelo.
      *

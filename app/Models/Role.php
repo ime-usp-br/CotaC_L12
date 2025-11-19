@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use OwenIt\Auditing\Models\Audit;
+use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\Permission\Models\Role as SpatieRole;
 
-class Role extends SpatieRole
+class Role extends SpatieRole implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     /**
      * Get the audits for the role.
      *

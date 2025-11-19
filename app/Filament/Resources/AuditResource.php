@@ -192,15 +192,37 @@ class AuditResource extends Resource
                 SelectFilter::make('auditable_type')
                     ->label('Tipo de Recurso')
                     ->options([
-                        'App\Models\User' => 'User',
-                        'App\Models\Role' => 'Role',
-                        'App\Models\Permission' => 'Permission',
+                        'App\Models\User' => 'Usuário',
+                        'App\Models\Role' => 'Papel',
+                        'App\Models\Permission' => 'Permissão',
+                        'App\Models\CotaRegular' => 'Cota Regular',
+                        'App\Models\CotaEspecial' => 'Cota Especial',
+                        'App\Models\Produto' => 'Produto',
                     ]),
 
                 SelectFilter::make('user_id')
                     ->label('Usuário')
                     ->options(fn () => \App\Models\User::pluck('name', 'id')->toArray())
                     ->searchable(),
+
+                \Filament\Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        \Filament\Forms\Components\DatePicker::make('created_from')
+                            ->label('Criado a partir de'),
+                        \Filament\Forms\Components\DatePicker::make('created_until')
+                            ->label('Criado até'),
+                    ])
+                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (\Illuminate\Database\Eloquent\Builder $query, $date): \Illuminate\Database\Eloquent\Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (\Illuminate\Database\Eloquent\Builder $query, $date): \Illuminate\Database\Eloquent\Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    }),
             ])
             ->defaultSort('created_at', 'desc')
             ->recordAction(ViewAction::class)

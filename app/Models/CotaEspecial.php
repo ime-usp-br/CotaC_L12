@@ -5,13 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use OwenIt\Auditing\Contracts\Auditable;
+
 /**
  * CotaEspecial - Armazena cotas mensais que se sobrepõem às cotas regulares.
  *
  * Cada consumidor pode ter apenas uma cota especial, que substitui
  * a cota regular baseada no vínculo.
  */
-class CotaEspecial extends Model
+class CotaEspecial extends Model implements Auditable
 {
     /**
      * O nome da tabela associada ao modelo.
@@ -19,6 +21,8 @@ class CotaEspecial extends Model
      * @var string
      */
     protected $table = 'cota_especiais';
+
+    use \OwenIt\Auditing\Auditable;
 
     /**
      * Os atributos que podem ser atribuídos em massa.

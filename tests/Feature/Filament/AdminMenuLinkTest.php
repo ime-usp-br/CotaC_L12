@@ -15,9 +15,7 @@ class AdminMenuLinkTest extends TestCase
     {
         parent::setUp();
 
-        // Create roles
-        Role::create(['name' => 'Admin', 'guard_name' => 'web']);
-        Role::create(['name' => 'usp_user', 'guard_name' => 'web']);
+        $this->seed(\Database\Seeders\RoleSeeder::class);
     }
 
     public function test_admin_user_sees_admin_panel_link_in_menu(): void

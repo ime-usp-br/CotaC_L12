@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use OwenIt\Auditing\Contracts\Auditable;
+
 /**
  * Produto - Representa os produtos disponíveis para consumo.
  *
@@ -13,10 +15,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @use HasFactory<\Database\Factories\ProdutoFactory>
  */
-class Produto extends Model
+class Produto extends Model implements Auditable
 {
     /** @use HasFactory<\Database\Factories\ProdutoFactory> */
     use HasFactory;
+    use \OwenIt\Auditing\Auditable;
 
     /**
      * Os atributos que podem ser atribuídos em massa.
