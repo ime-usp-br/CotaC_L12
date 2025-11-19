@@ -402,6 +402,17 @@ $this->app->instance(ReplicadoService::class, $fakeReplicado);
 
 **Critérios de Aceite:** Obrigatório e verificável
 
+### 9.2.1. Recuperação de Contexto da Issue
+
+**IMPORTANTE:** Ao iniciar uma tarefa baseada em uma Issue, **SEMPRE** utilize a CLI do GitHub para ler os detalhes completos, comentários e metadados atualizados.
+
+```bash
+gh issue view <ID> --json title,body
+```
+
+**NUNCA** confie apenas no título ou em suposições. A descrição da issue é a fonte da verdade.
+
+
 ### 9.3. Branches
 
 **IMPORTANTE:** Antes de começar a trabalhar em uma issue, **SEMPRE** crie uma branch específica para ela. Nunca trabalhe diretamente na `main` ou em branches de outras issues.
