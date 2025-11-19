@@ -127,4 +127,34 @@ class AuditIntegrationTest extends TestCase
             'event' => 'created',
         ]);
     }
+
+    public function test_consumidor_changes_are_audited(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('Admin');
+        $this->actingAs($admin);
+
+        // 1. Create
+        $consumidor = Consumidor::create([
+            'codpes' => 987654,
+            'nome' => 'Consumidor Teste Audit',
+        ]);
+
+        $this->assertDatabaseHas('audits', [
+            'auditable_type' => Consumidor::class,
+            'auditable_id' => $consumidor->codpes,
+            'event' => 'created',
+        ]);
+
+        // 2. Update
+        $consumidor->update(['nome' => 'Consumidor Teste Audit Editado']);
+
+        $this->assertDatabaseHas('audits', [
+            'auditable_type' => Consumidor::class,
+            'auditable_id' => $consumidor->codpes,
+            'event' => 'updated',
+            'old_values' => json_encode(['nome' => 'Consumidor Teste Audit']),
+            'new_values' => json_encode(['nome' => 'Consumidor Teste Audit Editado']),
+        ]);
+    }
 }

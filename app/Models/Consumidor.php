@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+use OwenIt\Auditing\Contracts\Auditable;
+
 /**
  * Consumidor - Representa uma pessoa que realizou pedidos no sistema.
  *
@@ -15,10 +17,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @use HasFactory<\Database\Factories\ConsumidorFactory>
  */
-class Consumidor extends Model
+class Consumidor extends Model implements Auditable
 {
     /** @use HasFactory<\Database\Factories\ConsumidorFactory> */
     use HasFactory;
+    use \OwenIt\Auditing\Auditable;
 
     /**
      * O nome da tabela associada ao modelo.

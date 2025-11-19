@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Filament\Resources\AuditResource;
+use App\Filament\Resources\ConsumidorResource;
 use App\Filament\Resources\CotaEspecialResource;
 use App\Filament\Resources\CotaRegularResource;
 use App\Filament\Resources\EmailLogResource;
@@ -31,6 +32,14 @@ class NavigationCardsWidget extends Widget
                 'url' => UserResource::getUrl('index'),
                 'color' => 'primary',
                 'stats' => \App\Models\User::count(),
+            ],
+            [
+                'title' => 'Consumidores',
+                'description' => 'Gerenciar consumidores do sistema',
+                'icon' => 'heroicon-o-user-group',
+                'url' => ConsumidorResource::getUrl('index'),
+                'color' => 'rose',
+                'stats' => \App\Models\Consumidor::count(),
             ],
             [
                 'title' => 'Cotas Regulares',

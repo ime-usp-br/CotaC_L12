@@ -34,8 +34,8 @@
                 {{-- Header --}}
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
                     {{-- Icon container --}}
-                    <div style="flex-shrink: 0; padding: 10px; border-radius: 8px; background-color: {{ $card['color'] === 'primary' ? 'rgba(16, 148, 171, 0.1)' : ($card['color'] === 'success' ? 'rgba(16, 185, 129, 0.1)' : ($card['color'] === 'warning' ? 'rgba(252, 180, 33, 0.1)' : ($card['color'] === 'gray' ? 'rgba(107, 114, 128, 0.1)' : ($card['color'] === 'info' ? 'rgba(59, 130, 246, 0.1)' : ($card['color'] === 'blue' ? 'rgba(59, 130, 246, 0.1)' : ($card['color'] === 'amber' ? 'rgba(245, 158, 11, 0.1)' : ($card['color'] === 'green' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(59, 130, 246, 0.1)'))))))) }};">
-                        <svg style="width: 20px; height: 20px; color: {{ $card['color'] === 'primary' ? '#1094AB' : ($card['color'] === 'success' ? '#10b981' : ($card['color'] === 'warning' ? '#FCB421' : ($card['color'] === 'gray' ? '#6b7280' : ($card['color'] === 'info' ? '#3b82f6' : ($card['color'] === 'blue' ? '#3b82f6' : ($card['color'] === 'amber' ? '#f59e0b' : ($card['color'] === 'green' ? '#22c55e' : '#3b82f6'))))))) }};"
+                    <div style="flex-shrink: 0; padding: 10px; border-radius: 8px; background-color: {{ $card['color'] === 'primary' ? 'rgba(16, 148, 171, 0.1)' : ($card['color'] === 'success' ? 'rgba(16, 185, 129, 0.1)' : ($card['color'] === 'warning' ? 'rgba(252, 180, 33, 0.1)' : ($card['color'] === 'gray' ? 'rgba(107, 114, 128, 0.1)' : ($card['color'] === 'info' ? 'rgba(59, 130, 246, 0.1)' : ($card['color'] === 'blue' ? 'rgba(59, 130, 246, 0.1)' : ($card['color'] === 'amber' ? 'rgba(245, 158, 11, 0.1)' : ($card['color'] === 'green' ? 'rgba(34, 197, 94, 0.1)' : ($card['color'] === 'rose' ? 'rgba(244, 63, 94, 0.1)' : 'rgba(59, 130, 246, 0.1)')))))))) }};">
+                        <svg style="width: 20px; height: 20px; color: {{ $card['color'] === 'primary' ? '#1094AB' : ($card['color'] === 'success' ? '#10b981' : ($card['color'] === 'warning' ? '#FCB421' : ($card['color'] === 'gray' ? '#6b7280' : ($card['color'] === 'info' ? '#3b82f6' : ($card['color'] === 'blue' ? '#3b82f6' : ($card['color'] === 'amber' ? '#f59e0b' : ($card['color'] === 'green' ? '#22c55e' : ($card['color'] === 'rose' ? '#f43f5e' : '#3b82f6')))))))) }};"
                              fill="none"
                              stroke="currentColor"
                              viewBox="0 0 24 24"
@@ -56,6 +56,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                             @elseif($card['icon'] === 'heroicon-o-envelope')
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            @elseif($card['icon'] === 'heroicon-o-user-group')
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"/>
                             @endif
                         </svg>
                     </div>
@@ -77,7 +79,7 @@
                 </p>
 
                 {{-- Footer --}}
-                <div style="display: flex; align-items: center; font-size: 13px; font-weight: 600; color: {{ $card['color'] === 'primary' ? '#1094AB' : ($card['color'] === 'success' ? '#10b981' : ($card['color'] === 'warning' ? '#FCB421' : ($card['color'] === 'gray' ? '#6b7280' : ($card['color'] === 'info' ? '#3b82f6' : ($card['color'] === 'blue' ? '#3b82f6' : ($card['color'] === 'amber' ? '#f59e0b' : ($card['color'] === 'green' ? '#22c55e' : '#3b82f6'))))))) }};">
+                <div style="display: flex; align-items: center; font-size: 13px; font-weight: 600; color: {{ $card['color'] === 'primary' ? '#1094AB' : ($card['color'] === 'success' ? '#10b981' : ($card['color'] === 'warning' ? '#FCB421' : ($card['color'] === 'gray' ? '#6b7280' : ($card['color'] === 'info' ? '#3b82f6' : ($card['color'] === 'blue' ? '#3b82f6' : ($card['color'] === 'amber' ? '#f59e0b' : ($card['color'] === 'green' ? '#22c55e' : ($card['color'] === 'rose' ? '#f43f5e' : '#3b82f6')))))))) }};">
                     <span>Acessar</span>
                     <svg style="width: 14px; height: 14px; margin-left: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
