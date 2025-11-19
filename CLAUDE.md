@@ -415,11 +415,19 @@ test/<ID>-descricao-curta
 
 ### 9.4. Commits
 
-**Padrão:** Conventional Commits
+**IMPORTANTE:** Antes de commitar, **SEMPRE** verifique o histórico recente com `git log -n 5` para seguir o padrão exato do projeto.
+
+**Padrão:** Conventional Commits com Lista de Detalhes
 
 **Formato:**
 ```
-<tipo>(<escopo_opcional>): <descrição> (#<ID_da_Issue>)
+<tipo>(<escopo_opcional>): <descrição_curta>
+
+- Detalhe da mudança 1
+- Detalhe da mudança 2
+- Detalhe da mudança 3
+
+Ref: #<ID_da_Issue>
 ```
 
 **Tipos:**
@@ -431,8 +439,14 @@ test/<ID>-descricao-curta
 - `docs:` Mudanças na documentação
 
 **Exemplo:**
-```bash
-git commit -m "feat(pedido): adiciona validação de saldo antes de criar pedido (#45)"
+```text
+feat(pedido): adiciona validação de saldo antes de criar pedido
+
+- Implementa verificação de saldo no PedidoService
+- Adiciona teste unitário para saldo insuficiente
+- Exibe mensagem de erro amigável no frontend
+
+Ref: #45
 ```
 
 ### 9.5. Pull Requests
@@ -523,6 +537,18 @@ Garanta que seu editor tenha o plugin EditorConfig ativo.
 2. ✅ Filtrar vínculos: ativos + IME
 3. ✅ Calcular saldo: Cota - Pedidos do Mês Atual
 4. ✅ Bloquear se valor pedido > saldo
+
+### 11.7. Ambiente de Execução (Laravel Sail)
+
+1. ✅ **VERIFICAR** se o projeto usa Laravel Sail (existência de `docker-compose.yml`).
+2. ✅ **SE** usar Sail, **SEMPRE** prefixar comandos com `./vendor/bin/sail`.
+   - ❌ `php artisan migrate`
+   - ✅ `./vendor/bin/sail artisan migrate`
+   - ❌ `npm run dev`
+   - ✅ `./vendor/bin/sail npm run dev`
+   - ❌ `composer require ...`
+   - ✅ `./vendor/bin/sail composer require ...`
+3. ✅ **EXCEÇÃO:** Comandos git rodam na máquina host.
 
 ---
 
