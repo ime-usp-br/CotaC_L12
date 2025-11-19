@@ -35,12 +35,12 @@ class AuditResourceTest extends TestCase
     {
         $admin = User::factory()->create();
         $admin->assignRole('Admin');
-        
+
         $this->actingAs($admin);
 
         // Create an audit log by creating a product
         $produto = Produto::factory()->create(['nome' => 'Produto Teste', 'valor' => 100]);
-        
+
         // Get the audit record
         $audit = Audit::where('auditable_type', Produto::class)
             ->where('auditable_id', $produto->id)

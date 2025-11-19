@@ -16,7 +16,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Pedido extends Model
 {
+    /** @use HasFactory<\Database\Factories\PedidoFactory> */
     use HasFactory;
+
     /**
      * Os atributos que podem ser atribuídos em massa.
      *

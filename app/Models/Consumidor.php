@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
 use OwenIt\Auditing\Contracts\Auditable;
 
 /**
@@ -21,6 +20,7 @@ class Consumidor extends Model implements Auditable
 {
     /** @use HasFactory<\Database\Factories\ConsumidorFactory> */
     use HasFactory;
+
     use \OwenIt\Auditing\Auditable;
 
     /**

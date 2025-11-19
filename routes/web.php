@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'welcome');
 
 // Área pública - Balcão (sem autenticação)
+Route::get('/pedidos', function () {
+    return view('pedidos.index');
+})->name('pedidos.index');
+
 Route::post('/pedidos', [PedidoController::class, 'store'])->name('pedidos.store');
 
 // Área pública - Entrega (sem autenticação)

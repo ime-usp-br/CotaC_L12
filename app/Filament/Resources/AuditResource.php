@@ -215,12 +215,20 @@ class AuditResource extends Resource
                     ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
                         return $query
                             ->when(
-                                $data['created_from'],
-                                fn (\Illuminate\Database\Eloquent\Builder $query, $date): \Illuminate\Database\Eloquent\Builder => $query->whereDate('created_at', '>=', $date),
+                                $data['created_from'] ?? null,
+                                function (\Illuminate\Database\Eloquent\Builder $query, mixed $date): \Illuminate\Database\Eloquent\Builder {
+                                    assert(is_string($date) || $date instanceof \DateTimeInterface);
+
+                                    return $query->whereDate('created_at', '>=', $date);
+                                },
                             )
                             ->when(
-                                $data['created_until'],
-                                fn (\Illuminate\Database\Eloquent\Builder $query, $date): \Illuminate\Database\Eloquent\Builder => $query->whereDate('created_at', '<=', $date),
+                                $data['created_until'] ?? null,
+                                function (\Illuminate\Database\Eloquent\Builder $query, mixed $date): \Illuminate\Database\Eloquent\Builder {
+                                    assert(is_string($date) || $date instanceof \DateTimeInterface);
+
+                                    return $query->whereDate('created_at', '<=', $date);
+                                },
                             );
                     }),
             ])
