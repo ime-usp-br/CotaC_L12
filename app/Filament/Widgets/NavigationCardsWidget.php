@@ -7,6 +7,7 @@ use App\Filament\Resources\ConsumidorResource;
 use App\Filament\Resources\CotaEspecialResource;
 use App\Filament\Resources\CotaRegularResource;
 use App\Filament\Resources\EmailLogResource;
+use App\Filament\Resources\ExtratoResource;
 use App\Filament\Resources\Permissions\PermissionResource;
 use App\Filament\Resources\ProdutoResource;
 use App\Filament\Resources\Roles\RoleResource;
@@ -64,6 +65,14 @@ class NavigationCardsWidget extends Widget
                 'url' => ProdutoResource::getUrl('index'),
                 'color' => 'green',
                 'stats' => \App\Models\Produto::count(),
+            ],
+            [
+                'title' => 'Extratos',
+                'description' => 'Visualizar histórico de pedidos',
+                'icon' => 'heroicon-o-receipt-refund',
+                'url' => ExtratoResource::getUrl('index'),
+                'color' => 'purple',
+                'stats' => \App\Models\Pedido::count(),
             ],
             [
                 'title' => 'Perfis',
