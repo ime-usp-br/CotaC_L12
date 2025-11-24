@@ -69,12 +69,12 @@ class ExtratoResource extends Resource
                     })
                     ->wrap(),
                 TextColumn::make('valor_total_calculado')
-                    ->label('Valor Total')
+                    ->label('Total de Cotas')
                     ->state(function (Pedido $record) {
                         // Assuming logic to calculate total, or if it's stored.
                         // Based on rules: sum(qty * price)
                         // We might need to load items.produto
-                        return 'R$ '.number_format($record->itens->sum(fn (ItemPedido $i) => $i->quantidade * $i->valor_unitario), 2, ',', '.');
+                        return number_format($record->itens->sum(fn (ItemPedido $i) => $i->quantidade * $i->valor_unitario), 0, ',', '.').' Cotas';
                     }),
                 TextColumn::make('estado')
                     ->label('Status')
