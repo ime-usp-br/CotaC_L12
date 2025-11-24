@@ -21,45 +21,9 @@ class EntregaController extends Controller
      *
      * @return JsonResponse Lista de pedidos pendentes.
      */
-    public function index(): JsonResponse
+    public function index()
     {
-        $pedidosPendentes = Pedido::where('estado', 'REALIZADO')
-            ->with(['consumidor', 'itens.produto'])
-            ->orderBy('created_at', 'asc')
-            ->get();
-
-        return response()->json([
-            'data' => $pedidosPendentes->map(function ($pedido) {
-                $consumidor = $pedido->consumidor;
-                if ($consumidor === null) {
-                    return [];
-                }
-
-                return [
-                    'id' => $pedido->id,
-                    'consumidor' => [
-                        'codpes' => $consumidor->codpes,
-                        'nome' => $consumidor->nome,
-                    ],
-                    'estado' => $pedido->estado,
-                    'itens' => $pedido->itens->map(function ($item) {
-                        $produto = $item->produto;
-                        if ($produto === null) {
-                            return [];
-                        }
-
-                        return [
-                            'produto_id' => $item->produto_id,
-                            'produto_nome' => $produto->nome,
-                            'quantidade' => $item->quantidade,
-                            'valor_unitario' => $produto->valor,
-                            'valor_total' => $item->quantidade * $produto->valor,
-                        ];
-                    }),
-                    'created_at' => $pedido->created_at?->toIso8601String(),
-                ];
-            }),
-        ]);
+        return view('entregas.index');
     }
 
     /**
