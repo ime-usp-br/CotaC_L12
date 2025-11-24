@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Log;
  */
 class CotaService
 {
-
-
     /**
      * Cria uma nova instância do serviço.
      *

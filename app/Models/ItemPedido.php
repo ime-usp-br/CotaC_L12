@@ -10,6 +10,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * Esta é a tabela pivot entre Pedido e Produto, armazenando a quantidade
  * de cada produto em um pedido específico.
+ *
+ * @property int $id
+ * @property int $pedido_id
+ * @property int $produto_id
+ * @property int $quantidade
+ * @property int $valor_unitario
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Pedido $pedido
+ * @property-read \App\Models\Produto $produto
  */
 class ItemPedido extends Model
 {
