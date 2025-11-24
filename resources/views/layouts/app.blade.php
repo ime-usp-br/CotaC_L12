@@ -20,6 +20,11 @@
             {{-- Inclui o cabeçalho USP --}}
             <x-usp.header />
 
+            {{-- Barra de navegação (apenas para usuários autenticados) --}}
+            @auth
+                <livewire:layout.navigation />
+            @endauth
+
             <!-- Page Heading -->
             <!-- @if (isset($header))
                 <header class="bg-white dark:bg-gray-800 shadow">
