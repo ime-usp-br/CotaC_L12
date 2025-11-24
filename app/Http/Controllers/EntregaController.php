@@ -16,10 +16,10 @@ class EntregaController extends Controller
     /**
      * Lista todos os pedidos pendentes de entrega.
      *
-     * Retorna uma coleção JSON de pedidos com estado 'REALIZADO',
-     * incluindo os dados do consumidor e os itens do pedido.
+     * Retorna uma view com a interface de entrega onde atendentes
+     * podem visualizar pedidos pendentes e marcar como entregues.
      *
-     * @return JsonResponse Lista de pedidos pendentes.
+     * @return \Illuminate\View\View Interface de entrega de pedidos.
      */
     public function index()
     {

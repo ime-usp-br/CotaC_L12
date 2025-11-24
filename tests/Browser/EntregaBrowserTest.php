@@ -27,6 +27,7 @@ class EntregaBrowserTest extends DuskTestCase
             $pedido->itens()->create([
                 'produto_id' => $produto->id,
                 'quantidade' => 1,
+                'valor_unitario' => $produto->valor,
             ]);
 
             // Act & Assert
@@ -58,6 +59,7 @@ class EntregaBrowserTest extends DuskTestCase
             $pedido->itens()->create([
                 'produto_id' => $produto->id,
                 'quantidade' => 1,
+                'valor_unitario' => $produto->valor,
             ]);
 
             // Assert: Espera o Livewire poll atualizar a tela

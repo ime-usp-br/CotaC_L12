@@ -8,13 +8,16 @@ use Livewire\Component;
 
 class ListaPedidosPendentes extends Component
 {
-    public function render()
+    public function render(): \Illuminate\View\View
     {
         return view('livewire.lista-pedidos-pendentes', [
             'pedidos' => $this->getPedidosPendentes(),
         ]);
     }
 
+    /**
+     * @return Collection<int, \App\Models\Pedido>
+     */
     public function getPedidosPendentes(): Collection
     {
         return Pedido::where('estado', 'REALIZADO')

@@ -84,10 +84,12 @@ class CotaService
         }
 
         // 2. Busca vínculos ativos no IME
-        $codund = config('replicado.codundclg');
+        $configValue = config('replicado.codundclg');
+        $codund = is_numeric($configValue) ? (int) $configValue : 0;
+
         $vinculos = $this->replicadoService->obterVinculosAtivos(
             $consumidor->codpes,
-            (int) $codund
+            $codund
         );
 
         if (empty($vinculos)) {
