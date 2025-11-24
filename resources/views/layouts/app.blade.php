@@ -20,8 +20,6 @@
             {{-- Inclui o cabeçalho USP --}}
             <x-usp.header />
 
-            <livewire:layout.navigation />
-
             <!-- Page Heading -->
             <!-- @if (isset($header))
                 <header class="bg-white dark:bg-gray-800 shadow">
