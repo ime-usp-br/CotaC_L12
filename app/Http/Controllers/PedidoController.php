@@ -72,17 +72,12 @@ class PedidoController extends Controller
                 ],
                 'estado' => $pedido->estado,
                 'itens' => $pedido->itens->map(function ($item) {
-                    $produto = $item->produto;
-                    if ($produto === null) {
-                        return [];
-                    }
-
                     return [
                         'produto_id' => $item->produto_id,
-                        'produto_nome' => $produto->nome,
+                        'produto_nome' => $item->produto->nome,
                         'quantidade' => $item->quantidade,
-                        'valor_unitario' => $produto->valor,
-                        'valor_total' => $item->quantidade * $produto->valor,
+                        'valor_unitario' => $item->valor_unitario,
+                        'valor_total' => $item->quantidade * $item->valor_unitario,
                     ];
                 }),
                 'created_at' => $pedido->created_at?->toIso8601String(),
