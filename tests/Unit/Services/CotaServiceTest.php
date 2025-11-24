@@ -25,6 +25,9 @@ class CotaServiceTest extends TestCase
         // Configura o Fake Replicado Service
         $this->fakeReplicado = new FakeReplicadoService;
         $this->cotaService = new CotaService($this->fakeReplicado);
+
+        // Mock config
+        config(['replicado.codundclg' => 45]);
     }
 
     /**
@@ -68,7 +71,7 @@ class CotaServiceTest extends TestCase
             'valor' => 30,
         ]);
 
-        $this->fakeReplicado->setVinculos(654321, 8, ['SERVIDOR']);
+        $this->fakeReplicado->setVinculos(654321, 45, ['SERVIDOR']);
 
         // Act
         $resultado = $this->cotaService->calcularSaldoParaConsumidor($consumidor);
@@ -105,7 +108,7 @@ class CotaServiceTest extends TestCase
             'valor' => 40,
         ]);
 
-        $this->fakeReplicado->setVinculos(111222, 8, ['SERVIDOR', 'ALUNOPOS', 'DOCENTE']);
+        $this->fakeReplicado->setVinculos(111222, 45, ['SERVIDOR', 'ALUNOPOS', 'DOCENTE']);
 
         // Act
         $resultado = $this->cotaService->calcularSaldoParaConsumidor($consumidor);
@@ -128,7 +131,7 @@ class CotaServiceTest extends TestCase
         ]);
 
         // Não configura vínculos no fake (retornará array vazio)
-        $this->fakeReplicado->setVinculos(999888, 8, []);
+        $this->fakeReplicado->setVinculos(999888, 45, []);
 
         // Act
         $resultado = $this->cotaService->calcularSaldoParaConsumidor($consumidor);
@@ -151,7 +154,7 @@ class CotaServiceTest extends TestCase
         ]);
 
         // Configura vínculo, mas não cadastra cota regular correspondente
-        $this->fakeReplicado->setVinculos(777666, 8, ['ESTAGIARIO']);
+        $this->fakeReplicado->setVinculos(777666, 45, ['ESTAGIARIO']);
 
         // Act
         $resultado = $this->cotaService->calcularSaldoParaConsumidor($consumidor);
@@ -329,7 +332,7 @@ class CotaServiceTest extends TestCase
             'valor' => 40,
         ]);
 
-        $this->fakeReplicado->setVinculos(666555, 8, ['DOCENTE']);
+        $this->fakeReplicado->setVinculos(666555, 45, ['DOCENTE']);
 
         // Act
         $resultado = $this->cotaService->calcularSaldoParaConsumidor($consumidor);
@@ -383,5 +386,36 @@ class CotaServiceTest extends TestCase
         $this->assertEquals(100, $resultado['cota']);
         $this->assertEquals(20, $resultado['gasto']); // ✅ Deve usar preço histórico
         $this->assertEquals(80, $resultado['saldo']);
+    }
+
+    /**
+     * Testa que o cálculo de cota regular é case-insensitive para vínculos.
+     *
+     * Este teste verifica o fix do bug #44, onde diferenças de caixa (maiúscula/minúscula)
+     * nos vínculos retornados pelo Replicado impediam a aplicação da cota.
+     */
+    public function test_calcula_saldo_com_vinculo_case_insensitive(): void
+    {
+        // Arrange
+        $consumidor = Consumidor::factory()->create([
+            'codpes' => 102030,
+            'nome' => 'Teste Case Insensitive',
+        ]);
+
+        CotaRegular::create([
+            'vinculo' => 'SERVIDOR',
+            'valor' => 15,
+        ]);
+
+        // Simula Replicado retornando vinculo em minúsculo ou misto
+        $this->fakeReplicado->setVinculos(102030, 45, ['servidor', 'AlunoPos']);
+
+        // Act
+        $resultado = $this->cotaService->calcularSaldoParaConsumidor($consumidor);
+
+        // Assert
+        $this->assertEquals(15, $resultado['cota']);
+        $this->assertEquals(0, $resultado['gasto']);
+        $this->assertEquals(15, $resultado['saldo']);
     }
 }

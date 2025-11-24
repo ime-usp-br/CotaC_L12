@@ -14,10 +14,7 @@ use Illuminate\Support\Facades\Log;
  */
 class CotaService
 {
-    /**
-     * Código da unidade IME-USP.
-     */
-    private const CODUND_IME = 8;
+
 
     /**
      * Cria uma nova instância do serviço.
@@ -89,9 +86,10 @@ class CotaService
         }
 
         // 2. Busca vínculos ativos no IME
+        $codund = config('replicado.codundclg');
         $vinculos = $this->replicadoService->obterVinculosAtivos(
             $consumidor->codpes,
-            self::CODUND_IME
+            (int) $codund
         );
 
         if (empty($vinculos)) {
@@ -101,9 +99,26 @@ class CotaService
         }
 
         // 3. Busca a maior cota regular entre os vínculos
+        // Normalize vinculos to uppercase for matching
+        $vinculosNormalized = array_map('strtoupper', $vinculos);
+
+        Log::debug('CotaService: Searching for cota regular.', [
+            'codpes' => $consumidor->codpes,
+            'vinculos_from_replicado' => $vinculos,
+            'vinculos_normalized' => $vinculosNormalized,
+            'vinculos_count' => count($vinculos),
+        ]);
+
+        $cotasEncontradas = CotaRegular::whereIn('vinculo', $vinculosNormalized)->get();
+
+        Log::debug('CotaService: Cotas found in database.', [
+            'codpes' => $consumidor->codpes,
+            'cotas_count' => $cotasEncontradas->count(),
+            'cotas' => $cotasEncontradas->toArray(),
+        ]);
+
         /** @var int|null $maiorCota */
-        $maiorCota = CotaRegular::whereIn('vinculo', $vinculos)
-            ->max('valor');
+        $maiorCota = $cotasEncontradas->max('valor');
 
         if ($maiorCota === null) {
             Log::info("CotaService: No matching regular cota found for vinculos of codpes {$consumidor->codpes}.", [
