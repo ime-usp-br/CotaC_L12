@@ -39,7 +39,5 @@ class FilamentAdminSeeder extends Seeder
         if (! $admin->hasRole('Admin')) {
             $admin->assignRole($adminRole);
         }
-
-        $this->command->info('Admin user created: admin@usp.br / password');
     }
 }

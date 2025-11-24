@@ -59,6 +59,7 @@ class Consumidor extends Model implements Auditable
     protected $fillable = [
         'codpes',
         'nome',
+        'categoria',
     ];
 
     /**

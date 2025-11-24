@@ -73,7 +73,7 @@
 
     <div class="totals">
         <p><strong>Quantidade de Pedidos:</strong> {{ $totalQuantidade }}</p>
-        <p><strong>Valor Total:</strong> R$ {{ number_format($totalValor, 2, ',', '.') }}</p>
+        <p><strong>Total de Cotas:</strong> {{ number_format($totalValor, 0, ',', '.') }} Cotas</p>
     </div>
 
     <table>
@@ -83,7 +83,7 @@
                 <th>Data</th>
                 <th>Consumidor</th>
                 <th>Produtos</th>
-                <th>Valor</th>
+                <th>Cotas</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -102,7 +102,7 @@
                     @endforeach
                 </td>
                 <td class="text-right">
-                    R$ {{ number_format($pedido->itens->sum(fn($i) => $i->quantidade * $i->valor_unitario), 2, ',', '.') }}
+                    {{ number_format($pedido->itens->sum(fn($i) => $i->quantidade * $i->valor_unitario), 0, ',', '.') }} Cotas
                 </td>
                 <td>
                     <span class="badge badge-{{ strtolower($pedido->estado) }}">

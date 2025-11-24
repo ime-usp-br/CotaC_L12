@@ -106,6 +106,14 @@ class NavigationCardsWidget extends Widget
                 'color' => 'gray',
                 'stats' => \App\Models\EmailLog::count(),
             ],
+            [
+                'title' => 'Estatísticas',
+                'description' => 'Visualizar métricas e relatórios',
+                'icon' => 'heroicon-o-chart-bar',
+                'url' => \App\Filament\Pages\Estatisticas::getUrl(),
+                'color' => 'indigo',
+                'stats' => 5, // Number of widgets
+            ],
         ];
     }
 }

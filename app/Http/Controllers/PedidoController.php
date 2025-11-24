@@ -42,11 +42,23 @@ class PedidoController extends Controller
         // Obter dados do consumidor via Replicado (validação já foi feita no FormRequest)
         $pessoaData = $this->replicadoService->buscarPessoa($codpes);
 
+        // Obter vínculos ativos para determinar categoria
+        $vinculos = $this->replicadoService->obterVinculosAtivos($codpes, 8); // 8 = IME
+        $categoria = $this->determinarCategoria($vinculos);
+
         // Criar ou obter consumidor local
         $consumidor = Consumidor::firstOrCreate(
             ['codpes' => $codpes],
-            ['nome' => $pessoaData['nompes'] ?? 'Nome não informado']
+            [
+                'nome' => $pessoaData['nompes'] ?? 'Nome não informado',
+                'categoria' => $categoria,
+            ]
         );
+
+        // Atualizar categoria se já existir e estiver nula (ou sempre atualizar para manter sincronizado)
+        if ($consumidor->categoria !== $categoria) {
+            $consumidor->update(['categoria' => $categoria]);
+        }
 
         /** @var array<int, array{id: int, quantidade: int}> $produtos */
         $produtos = $request->validated('produtos');
@@ -83,5 +95,27 @@ class PedidoController extends Controller
                 'created_at' => $pedido->created_at?->toIso8601String(),
             ],
         ], 201);
+    }
+
+    /**
+     * Determina a categoria do consumidor baseada nos vínculos.
+     *
+     * @param  array<int, string>  $vinculos
+     */
+    private function determinarCategoria(array $vinculos): ?string
+    {
+        if (in_array('DOCENTE', $vinculos)) {
+            return 'Docente';
+        }
+
+        if (in_array('SERVIDOR', $vinculos)) {
+            return 'Servidor';
+        }
+
+        if (in_array('ALUNOPOS', $vinculos) || in_array('ALUNOGR', $vinculos)) {
+            return 'Aluno';
+        }
+
+        return null;
     }
 }
