@@ -32,6 +32,7 @@ class ListaPedidosPendentesTest extends TestCase
         $pedido->itens()->create([
             'produto_id' => $produto->id,
             'quantidade' => 1,
+            'valor_unitario' => $produto->valor,
         ]);
 
         Livewire::test(ListaPedidosPendentes::class)

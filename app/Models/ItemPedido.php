@@ -22,6 +22,7 @@ class ItemPedido extends Model
         'pedido_id',
         'produto_id',
         'quantidade',
+        'valor_unitario',
     ];
 
     /**
