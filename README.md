@@ -246,6 +246,26 @@ alias sail='./vendor/bin/sail'
 
 Agora você pode usar `sail up -d`, `sail artisan migrate`, `sail npm run dev`, etc.
 
+### 6.2. Configuração Adicional para Exportação de PDF
+
+O sistema utiliza **Browsershot** com **Puppeteer** para gerar PDFs (ex: exportação de extratos). Após a instalação inicial com Sail, é necessário instalar o Chrome headless shell:
+
+```bash
+./vendor/bin/sail exec --user=sail laravel.test npx puppeteer browsers install chrome-headless-shell
+```
+
+**Importante:** Esta instalação precisa ser repetida sempre que:
+- Os containers Docker forem reconstruídos (`sail build`)
+- Os containers forem removidos e recriados
+- Você fizer deploy em um novo ambiente
+
+O Chrome será instalado em `/home/sail/.cache/puppeteer/` dentro do container.
+
+**Verificação:** Para confirmar que o Chrome foi instalado corretamente:
+```bash
+./vendor/bin/sail exec --user=sail laravel.test ls -la /home/sail/.cache/puppeteer/
+```
+
 ### 7.2. Instalação Tradicional (Sem Docker)
 
 1.  **Pré-requisitos:**
