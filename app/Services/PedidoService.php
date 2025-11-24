@@ -41,12 +41,14 @@ class PedidoService
 
             // Cria os itens do pedido
             foreach ($produtos as $produto) {
+                $produtoModel = \App\Models\Produto::findOrFail($produto['id']);
                 $pedido->itens()->create([
                     'produto_id' => $produto['id'],
                     'quantidade' => $produto['quantidade'],
+                    'valor_unitario' => $produtoModel->valor,
                 ]);
 
-                Log::debug("PedidoService: Added item to pedido #{$pedido->id}: produto_id={$produto['id']}, quantidade={$produto['quantidade']}.");
+                Log::debug("PedidoService: Added item to pedido #{$pedido->id}: produto_id={$produto['id']}, quantidade={$produto['quantidade']}, valor_unitario={$produtoModel->valor}.");
             }
 
             // Carrega os relacionamentos para retornar o pedido completo

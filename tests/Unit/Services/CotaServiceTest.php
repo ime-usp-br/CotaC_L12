@@ -190,12 +190,14 @@ class CotaServiceTest extends TestCase
             'pedido_id' => $pedido->id,
             'produto_id' => $produto1->id,
             'quantidade' => 2, // 2 x 5 = 10
+            'valor_unitario' => 5,
         ]);
 
         ItemPedido::create([
             'pedido_id' => $pedido->id,
             'produto_id' => $produto2->id,
             'quantidade' => 1, // 1 x 10 = 10
+            'valor_unitario' => 10,
         ]);
 
         // Total gasto = 10 + 10 = 20
@@ -236,6 +238,7 @@ class CotaServiceTest extends TestCase
             'pedido_id' => $pedido->id,
             'produto_id' => $produto->id,
             'quantidade' => 2, // 2 x 15 = 30 (excede cota de 20)
+            'valor_unitario' => 15,
         ]);
 
         // Act
@@ -278,6 +281,7 @@ class CotaServiceTest extends TestCase
             'pedido_id' => $pedidoMesPassado->id,
             'produto_id' => $produto->id,
             'quantidade' => 3, // 3 x 10 = 30 (mês passado)
+            'valor_unitario' => 10,
         ]);
 
         // Pedido do mês atual
@@ -290,6 +294,7 @@ class CotaServiceTest extends TestCase
             'pedido_id' => $pedidoMesAtual->id,
             'produto_id' => $produto->id,
             'quantidade' => 1, // 1 x 10 = 10 (mês atual)
+            'valor_unitario' => 10,
         ]);
 
         // Act
@@ -333,5 +338,50 @@ class CotaServiceTest extends TestCase
         $this->assertEquals(100, $resultado['cota']);
         $this->assertEquals(0, $resultado['gasto']);
         $this->assertEquals(100, $resultado['saldo']);
+    }
+
+    /**
+     * Testa que alteração de preço de produto não afeta pedidos anteriores.
+     *
+     * Este teste verifica o fix do bug #42, onde mudanças no preço de produtos
+     * causavam alteração retroativa no histórico de gastos.
+     */
+    public function test_alteracao_preco_produto_nao_afeta_pedidos_anteriores(): void
+    {
+        // Arrange
+        $consumidor = Consumidor::factory()->create([
+            'codpes' => 123456,
+            'nome' => 'João Silva',
+        ]);
+
+        CotaEspecial::create([
+            'consumidor_codpes' => $consumidor->codpes,
+            'valor' => 100,
+        ]);
+
+        $produto = Produto::factory()->create(['valor' => 10]);
+
+        // Cria pedido com produto a R$ 10
+        $pedido = Pedido::create([
+            'consumidor_codpes' => $consumidor->codpes,
+            'estado' => 'REALIZADO',
+        ]);
+
+        ItemPedido::create([
+            'pedido_id' => $pedido->id,
+            'produto_id' => $produto->id,
+            'quantidade' => 2,
+            'valor_unitario' => 10, // Snapshot: 2 x 10 = 20
+        ]);
+
+        // Act: Altera o preço do produto para R$ 20
+        $produto->update(['valor' => 20]);
+
+        // Assert: Gasto mensal deve continuar sendo 20, não 40
+        $resultado = $this->cotaService->calcularSaldoParaConsumidor($consumidor);
+
+        $this->assertEquals(100, $resultado['cota']);
+        $this->assertEquals(20, $resultado['gasto']); // ✅ Deve usar preço histórico
+        $this->assertEquals(80, $resultado['saldo']);
     }
 }

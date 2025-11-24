@@ -137,16 +137,11 @@ class CotaService
         $gasto = $consumidor->pedidos()
             ->whereYear('created_at', $anoAtual)
             ->whereMonth('created_at', $mesAtual)
-            ->with('itens.produto')
+            ->with('itens')
             ->get()
             ->sum(function ($pedido) {
                 return $pedido->itens->sum(function ($item) {
-                    $produto = $item->produto;
-                    if ($produto === null) {
-                        return 0;
-                    }
-
-                    return $item->quantidade * $produto->valor;
+                    return $item->quantidade * $item->valor_unitario;
                 });
             });
 
