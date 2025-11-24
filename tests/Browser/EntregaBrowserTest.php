@@ -19,7 +19,7 @@ class EntregaBrowserTest extends DuskTestCase
             // Arrange
             $consumidor = Consumidor::factory()->create(['nome' => 'Consumidor Teste Browser']);
             $produto = Produto::factory()->create(['nome' => 'Café Expresso Browser']);
-            
+
             $pedido = Pedido::factory()->create([
                 'consumidor_codpes' => $consumidor->codpes,
                 'estado' => 'REALIZADO',
@@ -31,13 +31,13 @@ class EntregaBrowserTest extends DuskTestCase
 
             // Act & Assert
             $browser->visit('/entregas/pendentes')
-                    ->waitForText('Pedidos Pendentes')
-                    ->assertSee('Consumidor Teste Browser')
-                    ->assertSee('Café Expresso Browser')
-                    ->assertSee('Pedido #'.$pedido->id)
-                    ->press('Marcar como Entregue')
-                    ->waitUntilMissingText('Consumidor Teste Browser')
-                    ->assertDontSee('Consumidor Teste Browser');
+                ->waitForText('Pedidos Pendentes')
+                ->assertSee('Consumidor Teste Browser')
+                ->assertSee('Café Expresso Browser')
+                ->assertSee('Pedido #'.$pedido->id)
+                ->press('Marcar como Entregue')
+                ->waitUntilMissingText('Consumidor Teste Browser')
+                ->assertDontSee('Consumidor Teste Browser');
         });
     }
 
@@ -46,11 +46,11 @@ class EntregaBrowserTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             // Arrange: Começa na página
             $browser->visit('/entregas/pendentes');
-            
+
             // Act: Cria um pedido no banco de dados (simulando outro processo)
             $consumidor = Consumidor::factory()->create(['nome' => 'Novo Consumidor Auto']);
             $produto = Produto::factory()->create(['nome' => 'Bolo Auto']);
-            
+
             $pedido = Pedido::factory()->create([
                 'consumidor_codpes' => $consumidor->codpes,
                 'estado' => 'REALIZADO',
@@ -62,7 +62,7 @@ class EntregaBrowserTest extends DuskTestCase
 
             // Assert: Espera o Livewire poll atualizar a tela
             $browser->waitForText('Novo Consumidor Auto', 10) // Espera até 10s (poll é 5s)
-                    ->assertSee('Bolo Auto');
+                ->assertSee('Bolo Auto');
         });
     }
 }

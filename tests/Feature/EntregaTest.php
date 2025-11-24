@@ -2,9 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Consumidor;
-use App\Models\Pedido;
-use App\Models\Produto;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
