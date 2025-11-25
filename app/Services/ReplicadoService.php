@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Exceptions\ReplicadoServiceException; // Import custom exception
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Uspdev\Replicado\Pessoa;
 
@@ -22,31 +21,26 @@ class ReplicadoService
      */
     public function buscarPessoa(int $codpes): ?array
     {
-        $cacheKey = "replicado.pessoa.{$codpes}";
+        try {
+            $pessoa = Pessoa::dump($codpes);
 
-        /** @var array{codpes: int, nompes: string, emailusp: string}|null */
-        return Cache::remember($cacheKey, now()->addHours(24), function () use ($codpes) {
-            try {
-                $pessoa = Pessoa::dump($codpes);
+            if (empty($pessoa) || ! isset($pessoa['nompes'])) {
+                Log::info("Replicado: Person not found for codpes {$codpes}.");
 
-                if (empty($pessoa) || ! isset($pessoa['nompes'])) {
-                    Log::info("Replicado: Person not found for codpes {$codpes}.");
-
-                    return null;
-                }
-
-                $emailUsp = Pessoa::retornarEmailUsp($codpes);
-
-                return [
-                    'codpes' => $codpes,
-                    'nompes' => is_string($pessoa['nompes']) ? $pessoa['nompes'] : '',
-                    'emailusp' => $emailUsp ?: '',
-                ];
-            } catch (\Exception $e) {
-                Log::error("Replicado Service Error: Failed fetching person data for codpes {$codpes}. Error: ".$e->getMessage(), ['exception' => $e]);
-                throw new ReplicadoServiceException('Replicado service communication error while fetching person data.', 0, $e);
+                return null;
             }
-        });
+
+            $emailUsp = Pessoa::retornarEmailUsp($codpes);
+
+            return [
+                'codpes' => $codpes,
+                'nompes' => is_string($pessoa['nompes']) ? $pessoa['nompes'] : '',
+                'emailusp' => $emailUsp ?: '',
+            ];
+        } catch (\Exception $e) {
+            Log::error("Replicado Service Error: Failed fetching person data for codpes {$codpes}. Error: ".$e->getMessage(), ['exception' => $e]);
+            throw new ReplicadoServiceException('Replicado service communication error while fetching person data.', 0, $e);
+        }
     }
 
     /**
@@ -62,37 +56,32 @@ class ReplicadoService
      */
     public function obterVinculosAtivos(int $codpes, int $codund): array
     {
-        $cacheKey = "replicado.vinculos.{$codpes}.{$codund}";
+        try {
+            // Configura temporariamente o código da unidade no ambiente
+            $originalCodeUnd = getenv('REPLICADO_CODUNDCLG');
+            putenv("REPLICADO_CODUNDCLG={$codund}");
 
-        /** @var array<int, string> */
-        return Cache::remember($cacheKey, now()->addHours(24), function () use ($codpes, $codund) {
-            try {
-                // Configura temporariamente o código da unidade no ambiente
-                $originalCodeUnd = getenv('REPLICADO_CODUNDCLG');
-                putenv("REPLICADO_CODUNDCLG={$codund}");
+            $vinculos = Pessoa::obterSiglasVinculosAtivos($codpes);
 
-                $vinculos = Pessoa::obterSiglasVinculosAtivos($codpes);
-
-                // Restaura o valor original
-                if ($originalCodeUnd !== false) {
-                    putenv("REPLICADO_CODUNDCLG={$originalCodeUnd}");
-                } else {
-                    putenv('REPLICADO_CODUNDCLG');
-                }
-
-                if (empty($vinculos)) {
-                    Log::info("Replicado: No active vinculos found for codpes {$codpes} in unit {$codund}.");
-
-                    return [];
-                }
-
-                /** @var array<int, string> */
-                return $vinculos;
-            } catch (\Exception $e) {
-                Log::error("Replicado Service Error: Failed fetching vinculos for codpes {$codpes} in unit {$codund}. Error: ".$e->getMessage(), ['exception' => $e]);
-                throw new ReplicadoServiceException('Replicado service communication error while fetching vinculos.', 0, $e);
+            // Restaura o valor original
+            if ($originalCodeUnd !== false) {
+                putenv("REPLICADO_CODUNDCLG={$originalCodeUnd}");
+            } else {
+                putenv('REPLICADO_CODUNDCLG');
             }
-        });
+
+            if (empty($vinculos)) {
+                Log::info("Replicado: No active vinculos found for codpes {$codpes} in unit {$codund}.");
+
+                return [];
+            }
+
+            /** @var array<int, string> */
+            return $vinculos;
+        } catch (\Exception $e) {
+            Log::error("Replicado Service Error: Failed fetching vinculos for codpes {$codpes} in unit {$codund}. Error: ".$e->getMessage(), ['exception' => $e]);
+            throw new ReplicadoServiceException('Replicado service communication error while fetching vinculos.', 0, $e);
+        }
     }
 
     /**
