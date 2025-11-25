@@ -19,7 +19,7 @@ class RecentActivityWidget extends BaseWidget
     {
         return $table
             ->query(
-                Pedido::query()->latest()->limit(5)
+                Pedido::query()->with('consumidor')->latest()->limit(5)
             )
             ->columns([
                 Tables\Columns\TextColumn::make('id')

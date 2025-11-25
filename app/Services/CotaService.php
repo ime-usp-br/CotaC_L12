@@ -74,7 +74,8 @@ class CotaService
      */
     private function obterCotaMensal(Consumidor $consumidor): int
     {
-        // 1. Verifica se existe Cota Especial
+        // 1. Verifica se existe Cota Especial (eager load to avoid N+1)
+        $consumidor->load('cotaEspecial');
         $cotaEspecial = $consumidor->cotaEspecial;
         if ($cotaEspecial !== null) {
             $valor = $cotaEspecial->valor;

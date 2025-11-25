@@ -11,6 +11,7 @@ use App\Models\Permission;
 use App\Models\Produto;
 use App\Models\Role;
 use App\Models\User;
+use App\Observers\PedidoObserver;
 use App\Observers\PermissionObserver;
 use App\Observers\RoleObserver;
 use App\Policies\AuditPolicy;
@@ -69,5 +70,8 @@ class AppServiceProvider extends ServiceProvider
         // Register observers for auditing Spatie models
         Role::observe(RoleObserver::class);
         Permission::observe(PermissionObserver::class);
+
+        // Register observer for cache invalidation
+        Pedido::observe(PedidoObserver::class);
     }
 }
