@@ -39,5 +39,8 @@
                 {{ $slot }}
             </main>
         </div>
+        
+        {{-- Toast Notification Container --}}
+        <x-toast-container />
     </body>
 </html>

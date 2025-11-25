@@ -17,6 +17,7 @@
         "vite": "^6.3.6"
     },
     "dependencies": {
+        "alpinejs-notify": "^1.0.4",
         "puppeteer": "^24.31.0"
     }
 }
