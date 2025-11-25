@@ -23,10 +23,17 @@
                 >
                 <button
                     type="submit"
-                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    wire:loading.attr="disabled"
+                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 flex items-center gap-2"
                     {{ $consumidorData ? 'disabled' : '' }}
                 >
-                    {{ __('Buscar') }}
+                    <span wire:loading.remove wire:target="buscar">
+                        {{ __('Buscar') }}
+                    </span>
+                    <span wire:loading wire:target="buscar" class="flex items-center gap-2">
+                        <x-spinner size="sm" color="white" />
+                        {{ __('Buscando...') }}
+                    </span>
                 </button>
                 @if($consumidorData)
                     <button
@@ -44,16 +51,19 @@
         </div>
     </form>
 
-    {{-- Mensagem de erro --}}
-    @if($errorMessage)
-        <div class="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
-            <p class="text-sm text-red-800 dark:text-red-200">{{ $errorMessage }}</p>
+    {{-- Loading skeleton while fetching data --}}
+    <div wire:loading wire:target="buscar" class="mt-6 space-y-4">
+        <x-skeleton type="card" />
+        <div class="grid grid-cols-3 gap-4">
+            <x-skeleton type="card" />
+            <x-skeleton type="card" />
+            <x-skeleton type="card" />
         </div>
-    @endif
+    </div>
 
     {{-- Dados do consumidor --}}
     @if($consumidorData && $saldoInfo)
-        <div class="mt-6 space-y-4">
+        <div class="mt-6 space-y-4 animate-fade-in" wire:loading.remove wire:target="buscar">
             <div class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
                 <h3 class="text-lg font-semibold text-green-900 dark:text-green-100">
                     {{ $consumidorData['nompes'] }}

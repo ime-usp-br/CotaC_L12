@@ -34,8 +34,8 @@ class ListaPedidosPendentes extends Component
             $pedido->estado = 'ENTREGUE';
             $pedido->save();
 
-            // Opcional: Emitir evento ou flash message
-            // session()->flash('message', 'Pedido marcado como entregue!');
+            // Dispatch toast notification
+            $this->dispatch('toast', type: 'success', message: __('Pedido marcado como entregue!'));
         }
     }
 }

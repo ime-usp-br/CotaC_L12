@@ -31,16 +31,6 @@ class CarrinhoPedido extends Component
     public int $saldoDisponivel = 0;
 
     /**
-     * Mensagem de sucesso após criar pedido.
-     */
-    public ?string $mensagemSucesso = null;
-
-    /**
-     * Mensagem de erro.
-     */
-    public ?string $mensagemErro = null;
-
-    /**
      * Estado de processamento.
      */
     public bool $processando = false;
@@ -55,7 +45,7 @@ class CarrinhoPedido extends Component
     {
         $this->codpes = $codpes;
         $this->saldoDisponivel = $saldoInfo['saldo'];
-        $this->reset(['itens', 'mensagemSucesso', 'mensagemErro']);
+        $this->reset(['itens']);
     }
 
     /**
@@ -69,8 +59,6 @@ class CarrinhoPedido extends Component
         } else {
             $this->itens[$produtoId] = 1;
         }
-
-        $this->reset(['mensagemSucesso', 'mensagemErro']);
     }
 
     /**
@@ -79,7 +67,7 @@ class CarrinhoPedido extends Component
     #[On('consumidorLimpo')]
     public function limparCarrinho(): void
     {
-        $this->reset(['itens', 'codpes', 'saldoDisponivel', 'mensagemSucesso', 'mensagemErro']);
+        $this->reset(['itens', 'codpes', 'saldoDisponivel']);
     }
 
     /**
@@ -88,7 +76,6 @@ class CarrinhoPedido extends Component
     public function removerProduto(int $produtoId): void
     {
         unset($this->itens[$produtoId]);
-        $this->reset(['mensagemSucesso', 'mensagemErro']);
     }
 
     /**
@@ -113,11 +100,9 @@ class CarrinhoPedido extends Component
      */
     public function finalizarPedido(): void
     {
-        $this->reset(['mensagemSucesso', 'mensagemErro']);
-
         // Validações
         if (empty($this->itens)) {
-            $this->mensagemErro = __('Adicione ao menos um produto ao carrinho.');
+            $this->dispatch('toast', type: 'error', message: __('Adicione ao menos um produto ao carrinho.'));
 
             return;
         }
@@ -125,10 +110,10 @@ class CarrinhoPedido extends Component
         $total = $this->calcularTotal();
 
         if ($total > $this->saldoDisponivel) {
-            $this->mensagemErro = __('Saldo insuficiente. Disponível: :saldo, Necessário: :total', [
+            $this->dispatch('toast', type: 'error', message: __('Saldo insuficiente. Disponível: :saldo, Necessário: :total', [
                 'saldo' => $this->saldoDisponivel,
                 'total' => $total,
-            ]);
+            ]));
 
             return;
         }
@@ -162,7 +147,7 @@ class CarrinhoPedido extends Component
             if ($validator->fails()) {
                 $errors = $validator->errors();
                 $errorMessage = $errors->first('saldo') ?: $errors->first() ?: __('Erro na validação do pedido.');
-                $this->mensagemErro = is_string($errorMessage) ? $errorMessage : __('Erro na validação do pedido.');
+                $this->dispatch('toast', type: 'error', message: is_string($errorMessage) ? $errorMessage : __('Erro na validação do pedido.'));
 
                 return;
             }
@@ -179,6 +164,9 @@ class CarrinhoPedido extends Component
             // Disparar evento para o Alpine.js no topo da página
             $this->dispatch('pedido-criado', pedidoId: $pedido->id);
 
+            // Mostrar toast de sucesso
+            $this->dispatch('toast', type: 'success', message: __('Pedido criado com sucesso!'));
+
             // Limpar carrinho
             $this->reset(['itens']);
 
@@ -186,14 +174,14 @@ class CarrinhoPedido extends Component
             $this->dispatch('pedidoCriado');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $errorMessage = $e->validator->errors()->first('saldo') ?: __('Erro ao criar pedido. Tente novamente.');
-            $this->mensagemErro = is_string($errorMessage) ? $errorMessage : __('Erro ao criar pedido. Tente novamente.');
+            $this->dispatch('toast', type: 'error', message: is_string($errorMessage) ? $errorMessage : __('Erro ao criar pedido. Tente novamente.'));
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Erro ao criar pedido: '.$e->getMessage(), [
                 'codpes' => $this->codpes,
                 'produtos' => $this->itens,
                 'exception' => $e,
             ]);
-            $this->mensagemErro = __('Erro ao processar pedido. Tente novamente.');
+            $this->dispatch('toast', type: 'error', message: __('Erro ao processar pedido. Tente novamente.'));
         } finally {
             $this->processando = false;
         }
