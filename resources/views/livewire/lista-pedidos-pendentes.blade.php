@@ -38,6 +38,7 @@
                         <button
                             wire:click="marcarComoEntregue({{ $pedido->id }})"
                             wire:loading.attr="disabled"
+                            dusk="marcar-entregue-{{ $pedido->id }}"
                             class="w-full inline-flex justify-center items-center gap-2 px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all ease-in-out duration-150"
                         >
                             <span wire:loading.remove wire:target="marcarComoEntregue({{ $pedido->id }})">
