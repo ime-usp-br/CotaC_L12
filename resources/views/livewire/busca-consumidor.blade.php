@@ -10,17 +10,20 @@
                 {{ __('Número USP (NUSP)') }}
             </label>
             <div class="mt-1 flex gap-2">
-                <input
+                <x-text-input
                     type="text"
                     inputmode="numeric"
                     pattern="[0-9]*"
                     id="codpes"
-                    wire:model="codpes"
+                    wire:model.live="codpes"
+                    wire:blur="validateNusp"
                     autocomplete="off"
                     placeholder="{{ __('Digite o Número USP') }}"
-                    class="flex-1 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    {{ $consumidorData ? 'disabled' : '' }}
-                >
+                    class="flex-1"
+                    :disabled="$consumidorData !== null"
+                    :validatable="true"
+                    :valid="$nuspValid"
+                />
                 <button
                     type="submit"
                     wire:loading.attr="disabled"
@@ -45,9 +48,7 @@
                     </button>
                 @endif
             </div>
-            @error('codpes')
-                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-            @enderror
+            <x-input-error :messages="$errors->get('codpes')" />
         </div>
     </form>
 
