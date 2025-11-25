@@ -39,16 +39,9 @@ class PedidoService
 
             Log::info("PedidoService: Created pedido #{$pedido->id} for codpes {$consumidor->codpes}.");
 
-            // Batch load all produtos to avoid N+1 query
-            $produtoIds = collect($produtos)->pluck('id');
-            $produtosCollection = \App\Models\Produto::whereIn('id', $produtoIds)->get()->keyBy('id');
-
             // Cria os itens do pedido
             foreach ($produtos as $produto) {
-                $produtoModel = $produtosCollection[$produto['id']] ?? null;
-                if ($produtoModel === null) {
-                    throw new \Exception("Produto {$produto['id']} not found");
-                }
+                $produtoModel = \App\Models\Produto::findOrFail($produto['id']);
                 $pedido->itens()->create([
                     'produto_id' => $produto['id'],
                     'quantidade' => $produto['quantidade'],
