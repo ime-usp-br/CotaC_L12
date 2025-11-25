@@ -98,6 +98,49 @@ Este sistema destina-se a:
 *   **Testes:** PHPUnit (Unit/Feature), Laravel Dusk (E2E)
 *   **Qualidade:** Laravel Pint (PSR-12), Larastan (análise estática)
 
+### 4.1. UX Features
+
+O sistema implementa padrões modernos de UX para melhorar a experiência do usuário:
+
+#### Toast Notifications
+Sistema unificado de notificações temporárias que aparecem no canto superior direito:
+- ✅ 4 tipos: success, error, warning, info
+- ✅ Auto-dismiss após 5 segundos
+- ✅ Suporte a dark mode
+- ✅ ARIA live regions para acessibilidade
+- ✅ Animação slide-in-down
+
+#### Loading States
+Feedback visual durante operações assíncronas:
+- **Spinners:** Indicadores de carregamento em botões (4 tamanhos, 5 cores)
+- **Skeleton Loaders:** Placeholders animados para conteúdo (text, card, avatar, button)
+- ✅ Integração com Livewire wire:loading
+- ✅ Suporte a dark mode
+
+#### Form Validation
+Validação em tempo real com feedback visual:
+- ✅ Validação on-blur (ao sair do campo)
+- ✅ Indicadores visuais: ✓ verde (válido), ✗ vermelho (inválido)
+- ✅ Mensagens de erro animadas
+- ✅ Reset automático ao digitar
+
+#### Animations
+6 animações customizadas via Tailwind CSS:
+- `fade-in` - Aparecimento suave
+- `slide-in-up/down/left` - Deslizamento direcional
+- `scale-in` - Crescimento do centro
+- `bounce-subtle` - Bounce sutil
+- ✅ Transitions interativas (hover, active states)
+
+#### Accessibility
+- ✅ ARIA attributes em todos componentes
+- ✅ Keyboard navigation
+- ✅ Screen reader support
+- ✅ Color contrast WCAG AA
+
+*Para documentação completa dos padrões UX, consulte [`docs/frontend/ux-patterns.md`](./docs/frontend/ux-patterns.md).*
+
+
 ## 5. Arquitetura do Sistema
 
 ### 5.1. Separação de Camadas
