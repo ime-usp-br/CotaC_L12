@@ -2,11 +2,12 @@
 
 namespace Tests\Unit\Components;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class SkeletonComponentTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_renders_skeleton_with_default_type(): void
     {
         $view = $this->blade('<x-skeleton />');
@@ -16,7 +17,7 @@ class SkeletonComponentTest extends TestCase
         $view->assertSee('dark:bg-gray-700');
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_text_skeleton(): void
     {
         $view = $this->blade('<x-skeleton type="text" />');
@@ -24,7 +25,7 @@ class SkeletonComponentTest extends TestCase
         $view->assertSee('h-4');
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_card_skeleton(): void
     {
         $view = $this->blade('<x-skeleton type="card" />');
@@ -32,7 +33,7 @@ class SkeletonComponentTest extends TestCase
         $view->assertSee('h-32');
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_avatar_skeleton(): void
     {
         $view = $this->blade('<x-skeleton type="avatar" />');
@@ -42,7 +43,7 @@ class SkeletonComponentTest extends TestCase
         $view->assertSee('rounded-full');
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_button_skeleton(): void
     {
         $view = $this->blade('<x-skeleton type="button" />');
@@ -51,7 +52,7 @@ class SkeletonComponentTest extends TestCase
         $view->assertSee('w-24');
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_multiple_text_lines(): void
     {
         $view = $this->blade('<x-skeleton type="text" lines="3" />');
@@ -59,7 +60,7 @@ class SkeletonComponentTest extends TestCase
         $view->assertSee('space-y-3');
     }
 
-    /** @test */
+    #[Test]
     public function skeleton_has_pulse_animation(): void
     {
         $view = $this->blade('<x-skeleton />');
@@ -67,7 +68,7 @@ class SkeletonComponentTest extends TestCase
         $view->assertSee('animate-pulse');
     }
 
-    /** @test */
+    #[Test]
     public function skeleton_supports_dark_mode(): void
     {
         $view = $this->blade('<x-skeleton />');

@@ -2,11 +2,12 @@
 
 namespace Tests\Unit\Components;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class SpinnerComponentTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_renders_spinner_with_default_size(): void
     {
         $view = $this->blade('<x-spinner />');
@@ -16,7 +17,7 @@ class SpinnerComponentTest extends TestCase
         $view->assertSee('w-6');
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_small_spinner(): void
     {
         $view = $this->blade('<x-spinner size="sm" />');
@@ -25,7 +26,7 @@ class SpinnerComponentTest extends TestCase
         $view->assertSee('w-4');
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_large_spinner(): void
     {
         $view = $this->blade('<x-spinner size="lg" />');
@@ -34,7 +35,7 @@ class SpinnerComponentTest extends TestCase
         $view->assertSee('w-8');
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_extra_large_spinner(): void
     {
         $view = $this->blade('<x-spinner size="xl" />');
@@ -43,7 +44,7 @@ class SpinnerComponentTest extends TestCase
         $view->assertSee('w-12');
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_spinner_with_default_color(): void
     {
         $view = $this->blade('<x-spinner />');
@@ -51,7 +52,7 @@ class SpinnerComponentTest extends TestCase
         $view->assertSee('text-blue-600');
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_white_spinner(): void
     {
         $view = $this->blade('<x-spinner color="white" />');
@@ -59,7 +60,7 @@ class SpinnerComponentTest extends TestCase
         $view->assertSee('text-white');
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_green_spinner(): void
     {
         $view = $this->blade('<x-spinner color="green" />');
@@ -67,16 +68,16 @@ class SpinnerComponentTest extends TestCase
         $view->assertSee('text-green-600');
     }
 
-    /** @test */
+    #[Test]
     public function spinner_has_accessibility_attributes(): void
     {
         $view = $this->blade('<x-spinner />');
 
-        $view->assertSee('role="status"');
-        $view->assertSee('aria-label');
+        $view->assertSee('role="status"', false);
+        $view->assertSee('aria-label', false);
     }
 
-    /** @test */
+    #[Test]
     public function spinner_has_spin_animation(): void
     {
         $view = $this->blade('<x-spinner />');
