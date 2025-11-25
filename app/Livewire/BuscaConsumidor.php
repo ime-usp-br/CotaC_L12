@@ -36,6 +36,39 @@ class BuscaConsumidor extends Component
     public ?array $saldoInfo = null;
 
     /**
+     * Estado de validação do NUSP (null = não validado, true = válido, false = inválido).
+     */
+    public ?bool $nuspValid = null;
+
+    /**
+     * Valida o formato do NUSP on blur.
+     */
+    public function validateNusp(): void
+    {
+        // Não validar se o campo estiver vazio
+        if (empty($this->codpes)) {
+            $this->nuspValid = null;
+
+            return;
+        }
+
+        // Validar se é um número inteiro
+        if (is_numeric($this->codpes) && ctype_digit($this->codpes)) {
+            $this->nuspValid = true;
+        } else {
+            $this->nuspValid = false;
+        }
+    }
+
+    /**
+     * Reseta a validação quando o usuário digita.
+     */
+    public function updatedCodpes(): void
+    {
+        $this->nuspValid = null;
+    }
+
+    /**
      * Busca o consumidor no Replicado e calcula o saldo.
      */
     public function buscar(): void
