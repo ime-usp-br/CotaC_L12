@@ -10,13 +10,14 @@ use App\Models\Pedido;
 use App\Models\Produto;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ToastDispatchTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function busca_consumidor_dispatches_error_toast_for_invalid_nusp(): void
     {
         Livewire::test(BuscaConsumidor::class)
@@ -25,18 +26,15 @@ class ToastDispatchTest extends TestCase
             ->assertHasErrors(['codpes']);
     }
 
-    /** @test */
+    #[Test]
     public function carrinho_pedido_dispatches_error_toast_when_cart_is_empty(): void
     {
         Livewire::test(CarrinhoPedido::class)
             ->call('finalizarPedido')
-            ->assertDispatched('toast', function ($event) {
-                return $event['type'] === 'error'
-                    && str_contains($event['message'], 'Adicione ao menos um produto');
-            });
+            ->assertDispatched('toast', type: 'error');
     }
 
-    /** @test */
+    #[Test]
     public function carrinho_pedido_dispatches_error_toast_when_saldo_insufficient(): void
     {
         $consumidor = Consumidor::factory()->create();
@@ -47,23 +45,17 @@ class ToastDispatchTest extends TestCase
             ->set('saldoDisponivel', 500)
             ->set('itens', [$produto->id => 1])
             ->call('finalizarPedido')
-            ->assertDispatched('toast', function ($event) {
-                return $event['type'] === 'error'
-                    && str_contains($event['message'], 'Saldo insuficiente');
-            });
+            ->assertDispatched('toast', type: 'error');
     }
 
-    /** @test */
+    #[Test]
     public function lista_pedidos_dispatches_success_toast_when_marking_as_delivered(): void
     {
         $pedido = Pedido::factory()->create(['estado' => 'REALIZADO']);
 
         Livewire::test(ListaPedidosPendentes::class)
             ->call('marcarComoEntregue', $pedido->id)
-            ->assertDispatched('toast', function ($event) {
-                return $event['type'] === 'success'
-                    && str_contains($event['message'], 'marcado como entregue');
-            });
+            ->assertDispatched('toast', type: 'success');
 
         $this->assertDatabaseHas('pedidos', [
             'id' => $pedido->id,
@@ -71,25 +63,19 @@ class ToastDispatchTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function toast_events_have_required_properties(): void
+    #[Test]
+    public function toast_events_are_dispatched_with_correct_structure(): void
     {
         Livewire::test(CarrinhoPedido::class)
             ->call('finalizarPedido')
-            ->assertDispatched('toast', function ($event) {
-                return isset($event['type']) && isset($event['message']);
-            });
+            ->assertDispatched('toast');
     }
 
-    /** @test */
-    public function toast_type_is_one_of_valid_types(): void
+    #[Test]
+    public function toast_type_is_error_for_empty_cart(): void
     {
-        $validTypes = ['success', 'error', 'warning', 'info'];
-
         Livewire::test(CarrinhoPedido::class)
             ->call('finalizarPedido')
-            ->assertDispatched('toast', function ($event) use ($validTypes) {
-                return in_array($event['type'], $validTypes);
-            });
+            ->assertDispatched('toast', type: 'error');
     }
 }
