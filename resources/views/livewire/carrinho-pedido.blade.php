@@ -3,16 +3,9 @@
         {{ __('Carrinho') }}
     </h2>
 
-    {{-- Mensagem de erro --}}
-    @if($mensagemErro)
-        <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
-            <p class="text-sm text-red-800 dark:text-red-200">{{ $mensagemErro }}</p>
-        </div>
-    @endif
-
     {{-- Itens do carrinho --}}
     @if(empty($itens))
-        <div class="py-8 text-center">
+        <div class="py-8 text-center animate-fade-in">
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
@@ -27,7 +20,7 @@
                     $quantidade = $itens[$produto->id] ?? 0;
                     $subtotal = $produto->valor * $quantidade;
                 @endphp
-                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-md">
+                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-md animate-slide-in-left">
                     <div class="flex-1">
                         <p class="font-medium text-gray-900 dark:text-white">
                             {{ $produto->nome }}
@@ -39,7 +32,7 @@
                     <button
                         type="button"
                         wire:click="removerProduto({{ $produto->id }})"
-                        class="ml-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                        class="ml-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors active:scale-95"
                         title="{{ __('Remover') }}"
                     >
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -84,13 +77,14 @@
             type="button"
             wire:click="finalizarPedido"
             wire:loading.attr="disabled"
-            class="w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            class="w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 flex items-center justify-center gap-2"
             {{ (!$saldoSuficiente || $processando) ? 'disabled' : '' }}
         >
             <span wire:loading.remove wire:target="finalizarPedido">
                 {{ __('Finalizar Pedido') }}
             </span>
-            <span wire:loading wire:target="finalizarPedido">
+            <span wire:loading wire:target="finalizarPedido" class="flex items-center gap-2">
+                <x-spinner size="sm" color="white" />
                 {{ __('Processando...') }}
             </span>
         </button>

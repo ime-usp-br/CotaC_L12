@@ -36,17 +36,12 @@ class BuscaConsumidor extends Component
     public ?array $saldoInfo = null;
 
     /**
-     * Mensagem de erro, se houver.
-     */
-    public ?string $errorMessage = null;
-
-    /**
      * Busca o consumidor no Replicado e calcula o saldo.
      */
     public function buscar(): void
     {
         // Limpar estado anterior
-        $this->reset(['consumidorData', 'saldoInfo', 'errorMessage']);
+        $this->reset(['consumidorData', 'saldoInfo']);
 
         // Validar entrada
         $this->validate([
@@ -67,7 +62,7 @@ class BuscaConsumidor extends Component
             $pessoaData = $replicadoService->buscarPessoa((int) $this->codpes);
 
             if ($pessoaData === null) {
-                $this->errorMessage = __('O Número USP informado não existe no sistema.');
+                $this->dispatch('toast', type: 'error', message: __('O Número USP informado não existe no sistema.'));
 
                 return;
             }
@@ -89,7 +84,7 @@ class BuscaConsumidor extends Component
             $this->dispatch('consumidorEncontrado', codpes: (int) $this->codpes, saldoInfo: $saldoInfo);
 
         } catch (\Exception $e) {
-            $this->errorMessage = __('Erro ao buscar dados do consumidor. Tente novamente.');
+            $this->dispatch('toast', type: 'error', message: __('Erro ao buscar dados do consumidor. Tente novamente.'));
         }
     }
 
@@ -98,7 +93,7 @@ class BuscaConsumidor extends Component
      */
     public function limpar(): void
     {
-        $this->reset(['codpes', 'consumidorData', 'saldoInfo', 'errorMessage']);
+        $this->reset(['codpes', 'consumidorData', 'saldoInfo']);
         $this->dispatch('consumidorLimpo');
     }
 
@@ -110,7 +105,7 @@ class BuscaConsumidor extends Component
     {
         // Limpar todos os dados do consumidor mas NÃO disparar consumidorLimpo
         // pois isso limparia a mensagem de sucesso do CarrinhoPedido
-        $this->reset(['codpes', 'consumidorData', 'saldoInfo', 'errorMessage']);
+        $this->reset(['codpes', 'consumidorData', 'saldoInfo']);
     }
 
     /**
