@@ -36,7 +36,7 @@ class EntregaBrowserTest extends DuskTestCase
                 ->assertSee('Consumidor Teste Browser')
                 ->assertSee('Café Expresso Browser')
                 ->assertSee('Pedido #'.$pedido->id)
-                ->press('Marcar como Entregue')
+                ->click('@marcar-entregue-'.$pedido->id)
                 ->waitUntilMissingText('Consumidor Teste Browser')
                 ->assertDontSee('Consumidor Teste Browser');
         });
