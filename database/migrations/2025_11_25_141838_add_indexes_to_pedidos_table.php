@@ -12,9 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pedidos', function (Blueprint $table) {
-            $table->index('consumidor_codpes'); // For FK lookups and JOINs
-            $table->index('estado');             // For WHERE filters
-            $table->index('created_at');         // For date range queries and ORDER BY
+            //
         });
     }
 
@@ -24,9 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('pedidos', function (Blueprint $table) {
-            $table->dropIndex(['consumidor_codpes']);
-            $table->dropIndex(['estado']);
-            $table->dropIndex(['created_at']);
+            //
         });
     }
 };
