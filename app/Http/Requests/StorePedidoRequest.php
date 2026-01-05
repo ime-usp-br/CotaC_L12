@@ -75,6 +75,10 @@ class StorePedidoRequest extends FormRequest
                 /** @var int $codpes */
                 $codpes = $this->input('codpes');
 
+                if (! $codpes) {
+                    return;
+                }
+
                 // Validar se codpes existe no Replicado
                 /** @var ReplicadoService $replicadoService */
                 $replicadoService = app(ReplicadoService::class);
