@@ -6,7 +6,6 @@ use App\Http\Requests\StorePedidoRequest;
 use App\Models\Consumidor;
 use App\Models\CotaRegular;
 use App\Models\Produto;
-use App\Services\CotaService;
 use App\Services\ReplicadoService;
 use Illuminate\Support\Facades\Route;
 use Tests\Fakes\FakeReplicadoService;
@@ -21,7 +20,7 @@ class StorePedidoRequestTest extends TestCase
         parent::setUp();
 
         // Configura Fake Replicado
-        $this->fakeReplicado = new FakeReplicadoService();
+        $this->fakeReplicado = new FakeReplicadoService;
         $this->app->instance(ReplicadoService::class, $this->fakeReplicado);
 
         // Mock config
@@ -52,8 +51,8 @@ class StorePedidoRequestTest extends TestCase
         $response = $this->postJson('/test/store-pedido', [
             'codpes' => 123456,
             'produtos' => [
-                ['id' => 99999, 'quantidade' => 1]
-            ]
+                ['id' => 99999, 'quantidade' => 1],
+            ],
         ]);
 
         $response->assertStatus(422)
@@ -70,8 +69,8 @@ class StorePedidoRequestTest extends TestCase
         $response = $this->postJson('/test/store-pedido', [
             'codpes' => 123456,
             'produtos' => [
-                ['id' => $produto->id, 'quantidade' => 0]
-            ]
+                ['id' => $produto->id, 'quantidade' => 0],
+            ],
         ]);
 
         $response->assertStatus(422)
@@ -91,15 +90,15 @@ class StorePedidoRequestTest extends TestCase
         $response = $this->postJson('/test/store-pedido', [
             'codpes' => 123456,
             'produtos' => [
-                ['id' => $produto->id, 'quantidade' => 1]
-            ]
+                ['id' => $produto->id, 'quantidade' => 1],
+            ],
         ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['codpes']);
-        
+
         $response->assertJsonFragment([
-            'codpes' => [__('O Número USP informado não existe no sistema.')]
+            'codpes' => [__('O Número USP informado não existe no sistema.')],
         ]);
     }
 
@@ -110,7 +109,7 @@ class StorePedidoRequestTest extends TestCase
     {
         $codpes = 654321;
         $nome = 'Maria Saldo Insuficiente';
-        
+
         // 1. Configura Fake Replicado com vínculo
         $this->fakeReplicado->setPessoa($codpes, ['nome' => $nome]);
         $this->fakeReplicado->setVinculos($codpes, 45, ['ALUNO']);
@@ -128,15 +127,15 @@ class StorePedidoRequestTest extends TestCase
         $response = $this->postJson('/test/store-pedido', [
             'codpes' => $codpes,
             'produtos' => [
-                ['id' => $produto->id, 'quantidade' => 1]
-            ]
+                ['id' => $produto->id, 'quantidade' => 1],
+            ],
         ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['saldo']);
-            
+
         $response->assertJsonFragment([
-            'saldo' => [__('Saldo insuficiente. Disponível: 10, Necessário: 20')]
+            'saldo' => [__('Saldo insuficiente. Disponível: 10, Necessário: 20')],
         ]);
     }
 
@@ -147,7 +146,7 @@ class StorePedidoRequestTest extends TestCase
     {
         $codpes = 111222;
         $nome = 'Pedro Rico';
-        
+
         // 1. Configura Fake Replicado
         $this->fakeReplicado->setPessoa($codpes, ['nome' => $nome]);
         $this->fakeReplicado->setVinculos($codpes, 45, ['DOCENTE']);
@@ -165,8 +164,8 @@ class StorePedidoRequestTest extends TestCase
         $response = $this->postJson('/test/store-pedido', [
             'codpes' => $codpes,
             'produtos' => [
-                ['id' => $produto->id, 'quantidade' => 1]
-            ]
+                ['id' => $produto->id, 'quantidade' => 1],
+            ],
         ]);
 
         $response->assertStatus(200)
