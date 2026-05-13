@@ -1,7 +1,8 @@
 <div wire:poll.5s>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse ($pedidos as $pedido)
-            <div wire:key="pedido-{{ $pedido->id }}" class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-500 ease-in-out animate-slide-in-up hover:-translate-y-1 hover:shadow-lg">
+            @php($isUrgent = $pedido->created_at->diffInMinutes(now()) > 45)
+            <div wire:key="pedido-{{ $pedido->id }}" class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border {{ $isUrgent ? 'border-orange-400 dark:border-orange-600' : 'border-gray-200 dark:border-gray-700' }} transition-all duration-500 ease-in-out animate-slide-in-up hover:-translate-y-1 hover:shadow-lg">
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <div>

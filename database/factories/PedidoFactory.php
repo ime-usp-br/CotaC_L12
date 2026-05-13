@@ -37,7 +37,17 @@ class PedidoFactory extends Factory
     public function entregue(): static
     {
         return $this->state(fn (array $attributes) => [
-            'estado' => 'ENTREGUE',
+            'estado' => Pedido::ESTADO_ENTREGUE,
+        ]);
+    }
+
+    /**
+     * Indicate that the pedido is expired.
+     */
+    public function expirado(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'estado' => Pedido::ESTADO_EXPIRADO,
         ]);
     }
 }

@@ -27,7 +27,7 @@ class ListaPedidosPendentesTest extends TestCase
 
         $pedido = Pedido::factory()->create([
             'consumidor_codpes' => $consumidor->codpes,
-            'estado' => 'REALIZADO',
+            'estado' => Pedido::ESTADO_REALIZADO,
         ]);
         $pedido->itens()->create([
             'produto_id' => $produto->id,
@@ -46,7 +46,7 @@ class ListaPedidosPendentesTest extends TestCase
         $consumidor = Consumidor::factory()->create();
         $pedido = Pedido::factory()->create([
             'consumidor_codpes' => $consumidor->codpes,
-            'estado' => 'REALIZADO',
+            'estado' => Pedido::ESTADO_REALIZADO,
         ]);
 
         Livewire::test(ListaPedidosPendentes::class)
@@ -54,7 +54,7 @@ class ListaPedidosPendentesTest extends TestCase
 
         $this->assertDatabaseHas('pedidos', [
             'id' => $pedido->id,
-            'estado' => 'ENTREGUE',
+            'estado' => Pedido::ESTADO_ENTREGUE,
         ]);
     }
 
@@ -63,10 +63,57 @@ class ListaPedidosPendentesTest extends TestCase
         $consumidor = Consumidor::factory()->create();
         $pedido = Pedido::factory()->create([
             'consumidor_codpes' => $consumidor->codpes,
-            'estado' => 'ENTREGUE',
+            'estado' => Pedido::ESTADO_ENTREGUE,
         ]);
 
         Livewire::test(ListaPedidosPendentes::class)
             ->assertDontSee('Pedido #'.$pedido->id);
+    }
+
+    public function test_orders_are_sorted_newest_first()
+    {
+        $consumidor = Consumidor::factory()->create();
+        $older = Pedido::factory()->create([
+            'consumidor_codpes' => $consumidor->codpes,
+            'estado' => Pedido::ESTADO_REALIZADO,
+            'created_at' => now()->subMinutes(30),
+        ]);
+        $newer = Pedido::factory()->create([
+            'consumidor_codpes' => $consumidor->codpes,
+            'estado' => Pedido::ESTADO_REALIZADO,
+            'created_at' => now()->subMinutes(5),
+        ]);
+
+        $component = Livewire::test(ListaPedidosPendentes::class);
+        $pedidos = $component->viewData('pedidos');
+
+        $this->assertTrue($pedidos->first()->is($newer));
+        $this->assertTrue($pedidos->last()->is($older));
+    }
+
+    public function test_does_not_show_orders_older_than_one_hour()
+    {
+        $consumidor = Consumidor::factory()->create();
+        $old = Pedido::factory()->create([
+            'consumidor_codpes' => $consumidor->codpes,
+            'estado' => Pedido::ESTADO_REALIZADO,
+            'created_at' => now()->subMinutes(61),
+        ]);
+
+        Livewire::test(ListaPedidosPendentes::class)
+            ->assertDontSee('Pedido #'.$old->id);
+    }
+
+    public function test_expired_orders_are_not_listed()
+    {
+        $consumidor = Consumidor::factory()->create();
+        $expirado = Pedido::factory()->create([
+            'consumidor_codpes' => $consumidor->codpes,
+            'estado' => Pedido::ESTADO_EXPIRADO,
+            'created_at' => now()->subMinutes(30),
+        ]);
+
+        Livewire::test(ListaPedidosPendentes::class)
+            ->assertDontSee('Pedido #'.$expirado->id);
     }
 }

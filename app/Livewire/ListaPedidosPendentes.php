@@ -20,9 +20,10 @@ class ListaPedidosPendentes extends Component
      */
     public function getPedidosPendentes(): Collection
     {
-        return Pedido::where('estado', 'REALIZADO')
+        return Pedido::where('estado', Pedido::ESTADO_REALIZADO)
+            ->where('created_at', '>', now()->subHour())
             ->with(['consumidor', 'itens.produto'])
-            ->orderBy('created_at', 'asc')
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 
@@ -30,8 +31,8 @@ class ListaPedidosPendentes extends Component
     {
         $pedido = Pedido::find($pedidoId);
 
-        if ($pedido && $pedido->estado === 'REALIZADO') {
-            $pedido->estado = 'ENTREGUE';
+        if ($pedido && $pedido->estado === Pedido::ESTADO_REALIZADO) {
+            $pedido->estado = Pedido::ESTADO_ENTREGUE;
             $pedido->save();
 
             // Dispatch toast notification
