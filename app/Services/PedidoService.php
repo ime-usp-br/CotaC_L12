@@ -34,7 +34,7 @@ class PedidoService
             // Cria o pedido com estado inicial REALIZADO
             $pedido = Pedido::create([
                 'consumidor_codpes' => $consumidor->codpes,
-                'estado' => 'REALIZADO',
+                'estado' => Pedido::ESTADO_REALIZADO,
             ]);
 
             Log::info("PedidoService: Created pedido #{$pedido->id} for codpes {$consumidor->codpes}.");
@@ -58,5 +58,17 @@ class PedidoService
 
             return $pedido;
         });
+    }
+
+    /**
+     * Expira pedidos REALIZADO com mais de 1 hora de criação.
+     *
+     * @return int Número de pedidos afetados
+     */
+    public function expirarPedidosAntigos(): int
+    {
+        return Pedido::where('estado', Pedido::ESTADO_REALIZADO)
+            ->where('created_at', '<=', now()->subHour())
+            ->update(['estado' => Pedido::ESTADO_EXPIRADO]);
     }
 }

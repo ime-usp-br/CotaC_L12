@@ -12,12 +12,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Pedido - Representa um pedido realizado por um consumidor.
  *
  * Cada pedido contém múltiplos itens (produtos com quantidades)
- * e possui um estado (REALIZADO, ENTREGUE).
+ * e possui um estado (REALIZADO, ENTREGUE, EXPIRADO).
  */
 class Pedido extends Model
 {
     /** @use HasFactory<\Database\Factories\PedidoFactory> */
     use HasFactory;
+
+    public const ESTADO_REALIZADO = 'REALIZADO';
+
+    public const ESTADO_ENTREGUE = 'ENTREGUE';
+
+    public const ESTADO_EXPIRADO = 'EXPIRADO';
 
     /**
      * Os atributos que podem ser atribuídos em massa.
@@ -28,6 +34,15 @@ class Pedido extends Model
         'consumidor_codpes',
         'estado',
     ];
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder<$this>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<$this>
+     */
+    public function scopeRealizado($query)
+    {
+        return $query->where('estado', self::ESTADO_REALIZADO);
+    }
 
     /**
      * Retorna o consumidor que realizou o pedido.
