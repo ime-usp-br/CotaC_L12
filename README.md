@@ -550,33 +550,33 @@ Este Starter Kit inclui ferramentas para ajudar a manter a qualidade e a consist
     ```bash
     php artisan test
     ```
-*   **Executando Testes Dusk (Browser / End-to-End):** Rodar testes Dusk requer que **o servidor da aplicação e o ChromeDriver estejam rodando simultaneamente** antes de executar o comando de teste.
-    1.  **Terminal 1 - Servidor da Aplicação:**
+*   **Executando Testes Dusk (Browser / End-to-End):**
+    *   **Com Laravel Sail (recomendado):**
         ```bash
-        php artisan serve
+        # Criar banco SQLite de testes (apenas na primeira vez)
+        mkdir -p storage/framework/testing
+        ./vendor/bin/sail touch storage/framework/testing/dusk.sqlite
+
+        # Rodar todos os testes Dusk
+        ./vendor/bin/sail artisan dusk
+
+        # Rodar arquivo específico
+        ./vendor/bin/sail artisan dusk tests/Browser/PedidoFlowTest.php
         ```
-        *(Mantenha este terminal rodando)*
-    2.  **Terminal 2 - ChromeDriver:**
-        *   **Problema Comum:** Em alguns ambientes, o comando `php artisan dusk:chrome-driver` pode *não* manter o processo rodando como esperado, saindo imediatamente após confirmar a instalação.
-        *   **Solução Manual:** Se o comando acima sair imediatamente, inicie o ChromeDriver manualmente, **especificando a porta 9515** (ou a porta definida em `DUSK_DRIVER_URL` no seu `.env.dusk.local`). Encontre o executável correto para seu sistema operacional dentro de `./vendor/laravel/dusk/bin/` e execute-o com a flag `--port`:
-          ```bash
-          # Exemplo para Linux:
-          ./vendor/laravel/dusk/bin/chromedriver-linux --port=9515
-
-          # Exemplo para macOS (Intel):
-          # ./vendor/laravel/dusk/bin/chromedriver-mac-x64 --port=9515
-
-          # Exemplo para macOS (Apple Silicon):
-          # ./vendor/laravel/dusk/bin/chromedriver-mac-arm64 --port=9515
-
-          # Exemplo para Windows (use Git Bash ou similar):
-          # ./vendor/laravel/dusk/bin/chromedriver-win.exe --port=9515
-          ```
-        *(Mantenha este terminal rodando. Você deve ver uma mensagem como "ChromeDriver was started successfully on port 9515.")*
-    3.  **Terminal 3 - Executar Testes Dusk:**
-        ```bash
-        php artisan dusk
-        ```
+    *   **Sem Sail (ChromeDriver local):**
+        1.  **Terminal 1 - Servidor da Aplicação:**
+            ```bash
+            php artisan serve --env=testing
+            ```
+        2.  **Terminal 2 - ChromeDriver:**
+            ```bash
+            ./vendor/laravel/dusk/bin/chromedriver-linux --port=9515
+            ```
+        3.  **Terminal 3 - Executar Testes Dusk:**
+            ```bash
+            php artisan dusk
+            ```
+    *   **Configuração:** O ambiente Dusk usa `.env.dusk.local` com banco SQLite em arquivo (`storage/framework/testing/dusk.sqlite`). Não é executado no CI/CD.
 *   **Fakes para Dependências USP:** O kit inclui classes `Fake` (ex: `FakeReplicadoService`, `FakeSenhaUnicaSocialiteProvider`) para facilitar a escrita de testes que interagem com as funcionalidades da Senha Única ou Replicado sem depender dos serviços reais (Planejado).
 
 ## 12. Documentação
