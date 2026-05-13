@@ -12,12 +12,12 @@
             </div>
 
             {{-- Mensagem de sucesso global --}}
-            <div 
-                x-data="{ 
-                    show: false, 
+            <div
+                x-data="{
+                    show: false,
                     message: '',
                     pedidoId: null
-                }" 
+                }"
                 x-on:pedido-criado.window="
                     pedidoId = $event.detail.pedidoId;
                     message = '{{ __("Pedido #") }}' + pedidoId + '{{ __(" criado com sucesso!") }}';
@@ -28,6 +28,7 @@
                 x-transition
                 class="mb-6"
                 style="display: none;"
+                dusk="pedido-sucesso-message"
             >
                 <div class="p-6 bg-green-50 dark:bg-green-900/20 border-2 border-green-500 dark:border-green-600 rounded-lg text-center">
                     <svg class="mx-auto h-12 w-12 text-green-600 dark:text-green-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

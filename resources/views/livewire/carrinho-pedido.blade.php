@@ -75,6 +75,7 @@
         {{-- Botão finalizar --}}
         <button
             type="button"
+            dusk="finalizar-pedido-button"
             wire:click="finalizarPedido"
             wire:loading.attr="disabled"
             class="w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 flex items-center justify-center gap-2"
